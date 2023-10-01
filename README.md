@@ -1,5 +1,6 @@
 # copilot共享服务
 
+[![GPLv2 License](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 ## 服务介绍
@@ -136,7 +137,7 @@ sh scrpits/vscode.sh --chat --copilot 123456 http://127.0.0.1:8080
 
 1. 该仓库参考了 [share-copilot](https://gitee.com/chuangxxt/share-copilot) 和 zhile 大佬的 [cocopilot](https://zhile.io/2023/09/09/github-got-banned.html) , 感恩！
 
-2. 该仓统一使用[black](https://github.com/psf/black)作为代码格式化标准，遵循 "less is more" ，使用[black](https://github.com/psf/black)原生标准，无任何自定义行为及参数需要
+2. 该仓统一使用 [black](https://github.com/psf/black) 作为代码格式化标准，遵循 "less is more" ，使用 [black](https://github.com/psf/black) 原生标准，无任何自定义行为及参数需要。
 
     Reference:
 
