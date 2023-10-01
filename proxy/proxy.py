@@ -28,36 +28,19 @@ async def proxy_request(request: Request, target_url: str):
         target_url,
         headers=request_headers,
         data=request_body,
+        stream=True,
     )
-    data = resp.content
-    status_code = resp.status_code
-    headers = dict(resp.headers)
-    res = Response(data, status_code, headers=headers)
-    if res.headers.get("Transfer-Encoding") == "chunked":
-        res.headers.pop("Content-Length")
-    res.automatically_set_content_length = False
-    return res
+    content_type = resp.headers.get("Content-Type", "").lower()
+    resp_headers = dict(resp.headers)
 
-    # 能力不足，异步疯狂报错，怀疑可能是网络原因 + 异步请求 导致的
-    # 暂存这部分代码，后续排查
+    # SEE响应需要分块传输
+    if content_type == "text/event-stream":
 
-    # async with aiohttp.ClientSession() as session:
-    #     for i in range(MAX_RETRIES):
-    #         try:
-    #             async with session.request(
-    #                 request_method,
-    #                 target_url,
-    #                 headers=request_headers,
-    #                 data=request_body,
-    #             ) as resp:
-    #                 data = await resp.read()
-    #                 status_code = resp.status
-    #                 headers = dict(resp.headers)
-    #                 res = Response(data, status_code, headers=headers)
-    #                 if res.headers.get("Transfer-Encoding"):
-    #                     res.headers.pop("Content-Length")
-    #                 res.automatically_set_content_length = False
-    #                 return res
-    #         except aiohttp.ServerConnectionError:
-    #             continue
-    #     return Response("Server Connection Error", 500)
+        def generate():
+            for line in resp.iter_lines(delimiter=b"\n\n"):
+                if line:
+                    yield line + b"\n\n"
+
+        return Response(generate(), status=resp.status_code, headers=resp_headers)
+    else:
+        return Response(resp.content, status=resp.status_code, headers=resp_headers)
