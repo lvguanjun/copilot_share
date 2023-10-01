@@ -66,29 +66,12 @@
         kill -9 pid
         ```
 
-    - uWSGI 部署代理服务器
-
-        ```bash
-        # 安装 uWSGI
-        pip install uwsgi
-        # 配置 uwsgi/uwsgi.ini
-        # 启动
-        uwsgi --ini uwsgi/uwsgi.ini --daemonize server.log
-        # 关闭，实际根据 pid 文件路径修改
-        uwsgi --stop uwsgi/uwsgi.pid
-        # 查看状态
-        uwsgi --connect-and-read uwsgi/uwsgi.status
-        ```
-
-        uWSGI 配置参考：
-        ```
-        [uwsgi]
-        http = 127.0.0.1:8080
-        wsgi-file = app.py
-        callable = app
-        pidfile = uwsgi/uwsgi.pid
-        stats = uwsgi/uwsgi.status
-        ```
+> 说明：uwsgi 部署存在问题，查看服务器响应正常，但插件无法正常使用，且 postman 报错如下，暂无法解决，故删除 uwsgi 部署相关说明。
+```
+name: "Error"
+code: "HPE_INVALID_CHUNK_SIZE"
+message: "Parse Error: Invalid character in chunk size"
+```
 
 ### 本地插件修改
 
@@ -132,6 +115,20 @@ sh scrpits/vscode.sh --chat --copilot 123456 http://127.0.0.1:8080
     ![log](readme/log.png)
 
 > vscode 玩家如果觉得以上都挺麻烦，可以下载 JetBrains 系列 IDE ，在 JetBrains 系列 IDE 中登录插件后，获取到 token 也可以直接在 vscode 中使用。
+
+## 成功示例
+
+- copilot 代理提示
+
+    ![copilot](readme/copilot.png)
+
+- copilot chat 代理提示
+
+    ![copilot-chat](readme/chat.png)
+
+- server 端展示
+
+    ![server](readme/server.png)
 
 ## 其他
 
