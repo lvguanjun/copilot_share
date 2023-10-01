@@ -63,7 +63,7 @@
         # 前台运行
         python app.py
         # 后台运行
-        nohup python app.py > server.log 2>&1 &
+        nohup python app.py > nohup.out 2>&1 &
         # 关闭后台运行
         ps -ef | grep app.py
         kill -9 pid
@@ -80,7 +80,7 @@
 
             ```bash
             # 在后台运行
-            nohup gunicorn --bind 127.0.0.1:8080 app:app > nohub.out 2>&1 &
+            nohup gunicorn --bind 127.0.0.1:8080 app:app > nohup.out 2>&1 &
             ```
 
         - **高级配置**
