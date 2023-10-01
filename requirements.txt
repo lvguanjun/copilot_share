@@ -1,0 +1,4 @@
+aiohttp==3.8.5
+Flask[async]==2.3.3
+requests==2.31.0
+uWSGI==2.0.22

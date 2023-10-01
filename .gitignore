@@ -1,0 +1,16 @@
+# product
+__pycache__
+
+# enviroment
+.venv
+.vscode
+
+# log
+app.log
+server.log
+
+# config
+config.py
+
+# uWSGI
+uwsgi

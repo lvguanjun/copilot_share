@@ -1,0 +1,138 @@
+# copilot共享服务
+
+## 服务介绍
+
+该服务作为代理服务器，中转 copilot 插件的相关请求，支持多个用户共享同一个 copilot 账号，支持非代理情况下使用 copilot 。适用于拥有 copilot 权限的账号使用者，分享 copilot 权限给小伙伴。
+
+> 代理服务器需要能够访问 github.com 。
+
+> 如果需要代理服务器代理整个 prompt 的响应，需要考虑服务器的带宽。
+
+### copilot插件逻辑
+
+1. 插件获取 github 账号的 token ，携带 token 请求 `api.github.com` 获取 copilot token 。
+
+    > github token 仅重新下线登录 github 时才会失效。
+
+2. 插件使用 copilot token 请求 copilot 服务，获取 copilot 的响应，即 copilot 的提示内容。
+3. 当 copilot token 失效时，插件重新携带 token 请求 copilot token 。
+
+### 代理服务器逻辑
+
+1. 提供代理服务器后具有权限的 github token ，代理服务器可以使用该 token 请求 copilot token 。
+2. 使用者修改插件，将对 `api.github.com` 获取 copilot 的请求代理到代理服务器，代理服务器使用 github token 请求 `api.github.com` ，提供 copilot token 。
+3. 插件使用代理服务器提供的 copilot token 请求 copilot 服务，获取 copilot 的响应，即 copilot 的提示内容。
+
+    > 同样可以通过修改插件，将对 copilot 服务的请求代理到代理服务器，代理服务器使用 copilot token 请求 copilot 服务，提供 copilot 的响应。
+
+因此实现了一个 github token 可以被多个用户共享，且不需要代理即可使用 copilot 。
+
+### 代理服务器细节
+
+1. 代理服务器可以使用多个 github token ，组成 token 池，减轻单个 token 的压力。
+2. 代理服务器可以将已获取的 copilot token 缓存，减少重复获取 copilot token 的请求。
+
+## 使用说明
+
+### 代理服务器
+
+1. 复制 config.sample.py 为 config.py ，并根据实际情况修改其中的配置
+
+    部分配置说明：
+
+    1. `server_config["token"]` ：自定义鉴权，用于拦截非鉴权请求，若无需要可设置为 None ，若使用 copilot-chat 且需要鉴权的情况下，可将本地的 github token 添加到该列表，**因为改 copilot-chat 的插件插入自定义 token 好麻烦**。
+    2. `GITHUB_TOKEN` ：即具备 copilot 权限账号的 token ，获取方式详见 [GITHUB TOKEN 获取](#github-token-获取)
+    3. `LOG_DEBUG` ：是否以 debug 模式记录日志。
+
+2. 配置虚拟环境
+
+    ```bash
+    python -m venv .venv
+    source .venv/bin/activate
+    pip install -r requirements.txt
+    ```
+
+3. 代理服务器运行
+
+    - 直接运行代理服务器
+
+        ```bash
+        # 前台运行
+        python app.py
+        # 后台运行
+        nohup python app.py > server.log 2>&1 &
+        # 关闭后台运行
+        ps -ef | grep app.py
+        kill -9 pid
+        ```
+
+    - uWSGI 部署代理服务器
+
+        ```bash
+        # 安装 uWSGI
+        pip install uwsgi
+        # 配置 uwsgi/uwsgi.ini
+        # 启动
+        uwsgi --ini uwsgi/uwsgi.ini --daemonize server.log
+        # 关闭，实际根据 pid 文件路径修改
+        uwsgi --stop uwsgi/uwsgi.pid
+        # 查看状态
+        uwsgi --connect-and-read uwsgi/uwsgi.status
+        ```
+
+        uWSGI 配置参考：
+        ```
+        [uwsgi]
+        http = 127.0.0.1:8080
+        wsgi-file = app.py
+        callable = app
+        pidfile = uwsgi/uwsgi.pid
+        stats = uwsgi/uwsgi.status
+        ```
+
+### 本地插件修改
+
+当前仅提供适用于 Windows, Linux 的vscode插件修改脚本，其他平台的修改请自行修改。
+
+示例：
+    
+```bash
+# 仅代理 token 获取
+sh scrpits/vscode.sh 123456 http://127.0.0.1:8080
+
+# copilot chat 也代理 token 获取
+sh scrpits/vscode.sh --chat 123456 http://127.0.0.1:8080
+
+# 代理 copilot prompt
+sh scrpits/vscode.sh --copilot 123456 http://127.0.0.1:8080
+
+# copilot chat 也代理 copilot prompt
+sh scrpits/vscode.sh --chat --copilot 123456 http://127.0.0.1:8080
+```
+
+> `http://127.0.0.1:8080` 即代理服务器地址。
+
+> **Windows 使用 git bash 等类似 bash 的终端运行脚本。**
+
+> 脚本原理说明：参考 [share-copilot](https://gitee.com/chuangxxt/share-copilot/blob/master/readme/codeTipsProxy.md)
+
+#### 参数说明
+
+- `custom_token`: 必填，代理服务器自定义鉴权，若服务器无需鉴权，随意提供字符串占位即可
+- `custom_api_url`: 必填，代理服务器地址，例如 `http://127.0.0.1:8080`
+
+> 若其他非必填项未填，则插件配置仅仅代理 token 的获取，其他请求不代理。
+
+### GITHUB TOKEN 获取
+
+1. JetBrains 系列 IDE 登录插件后 %userprofile%\AppData\Local\github-copilot\hosts.json 中会记录 token ，以 ghu_ 开头的字符串。
+
+2. vscode 可以登录插件后**抓包获取 token** ，以 gho_ 开头的字符串。不会抓包可以暂时忽视 GITHUB_TOKEN ，填写一个虚拟的字符串先启动代理服务器，然后修改本地插件后触发请求，查看 app.log 日志提取到 GITHUB_TOKEN ，更新 config.py 重启服务器即可。
+
+    ![log](readme/log.png)
+
+> vscode 玩家如果觉得以上都挺麻烦，可以下载 JetBrains 系列 IDE ，在 JetBrains 系列 IDE 中登录插件后，获取到 token 也可以直接在 vscode 中使用。
+
+## 其他
+
+1. 该仓库参考了 [share-copilot](https://gitee.com/chuangxxt/share-copilot) 和 zhile 大佬的 [cocopilot](https://zhile.io/2023/09/09/github-got-banned.html) , 感恩！
