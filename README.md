@@ -69,6 +69,49 @@
         kill -9 pid
         ```
 
+    - 使用 Gunicorn 进行部署
+
+        - **基础部署**
+
+            ```bash
+            # 直接在前台运行
+            gunicorn --bind 127.0.0.1:8080 app:app
+            ```
+
+            ```bash
+            # 在后台运行
+            nohup gunicorn --bind 127.0.0.1:8080 app:app > nohub.out 2>&1 &
+            ```
+
+        - **高级配置**
+
+            ```bash
+            # 指定工作进程数
+            gunicorn --bind 127.0.0.1:8080 -w 4 app:app
+            ```
+
+        - **使用配置文件**
+
+            ```bash
+            # 使用配置文件启动 gunicorn
+            nohup gunicorn -c gunicorn_config.py app:app > nohup.out 2>&1 &
+            ```
+
+            `gunicorn_config.py`的示例内容：
+
+            ```python
+            bind = "127.0.0.1:8080"  # 绑定IP和端口号
+            workers = 1  # 工作进程数
+            accesslog = "server_access.log"  # 访问日志文件
+            errorlog = "server_error.log"  # 错误日志文件
+            ```
+
+        > Gunicorn 默认在 8000 端口运行是该工具的预设值。 Gunicorn 不会自动采用 Flask 应用或其他 WSGI 应用设置的其他端口。需要显式地在 Gunicorn 的命令行选项或配置文件中指定端口。
+    
+    - nginx 反向代理
+
+        当前暂无云服务器，故 nginx 需自行查阅参考配置。
+
 > 说明：uwsgi 部署存在问题，查看服务器响应正常，但插件无法正常使用，且 postman 报错如下，暂无法解决，故删除 uwsgi 部署相关说明。
 ```
 name: "Error"

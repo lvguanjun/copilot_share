@@ -7,10 +7,13 @@ __pycache__
 
 # log
 app.log
-server.log
+nohup.out
+server_access.log
+server_error.log
 
 # config
 config.py
+gunicorn_config.py
 
 # uWSGI
 uwsgi
