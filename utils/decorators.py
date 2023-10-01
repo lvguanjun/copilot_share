@@ -22,9 +22,7 @@ def auth_required(fun):
     async def wrapper(*args, **kwargs):
         token = server_config.get("token")
         custom_token = request.headers.get("Authorization")
-        if not token or custom_token in (
-            f"token {t}" for t in token
-        ):
+        if not token or custom_token in (f"token {t}" for t in token):
             return await fun(*args, **kwargs)
         err_msg = {
             "msg": "token error",

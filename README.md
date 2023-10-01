@@ -1,5 +1,7 @@
 # copilot共享服务
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 ## 服务介绍
 
 该服务作为代理服务器，中转 copilot 插件的相关请求，支持多个用户共享同一个 copilot 账号，支持非代理情况下使用 copilot 。适用于拥有 copilot 权限的账号使用者，分享 copilot 权限给小伙伴。
@@ -133,3 +135,9 @@ sh scrpits/vscode.sh --chat --copilot 123456 http://127.0.0.1:8080
 ## 其他
 
 1. 该仓库参考了 [share-copilot](https://gitee.com/chuangxxt/share-copilot) 和 zhile 大佬的 [cocopilot](https://zhile.io/2023/09/09/github-got-banned.html) , 感恩！
+
+2. 该仓统一使用[black](https://github.com/psf/black)作为代码格式化标准，遵循 "less is more" ，使用[black](https://github.com/psf/black)原生标准，无任何自定义行为及参数需要
+
+    Reference:
+
+    - [五彩斑斓的 Black —— Python 代码格式化工具 - muzing 的杂货铺](https://muzing.top/posts/a29e4743/#其他)

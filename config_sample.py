@@ -12,7 +12,10 @@
 server_config = {
     "host": "127.0.0.1",
     "port": 8080,
-    "token": ["123456", "hello world"],
+    "token": [
+        "123456",
+        "hello world",
+    ],
 }
 
 
