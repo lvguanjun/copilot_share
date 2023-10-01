@@ -110,7 +110,7 @@ sh scrpits/vscode.sh --chat --copilot 123456 http://127.0.0.1:8080
 
 1. JetBrains 系列 IDE 登录插件后 %userprofile%\AppData\Local\github-copilot\hosts.json 中会记录 token ，以 ghu_ 开头的字符串。
 
-2. vscode 可以登录插件后**抓包获取 token** ，以 gho_ 开头的字符串。不会抓包可以暂时忽视 GITHUB_TOKEN ，填写一个虚拟的字符串先启动代理服务器，然后修改本地插件后触发请求，查看 app.log 日志提取到 GITHUB_TOKEN ，更新 config.py 重启服务器即可。
+2. vscode 可以登录插件后**抓包获取 token** ，以 gho_ 开头的字符串。不会抓包可以暂时忽视 GITHUB_TOKEN ，填写一个虚拟的字符串先启动代理服务器，然后使用 `--chat` 参数调用脚本修改本地插件后触发请求，查看 app.log 日志提取到 GITHUB_TOKEN ，更新 config.py 重启服务器即可。
 
     ![log](readme/log.png)
 
