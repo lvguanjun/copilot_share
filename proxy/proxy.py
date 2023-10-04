@@ -11,7 +11,7 @@ import requests
 from flask import Request, Response
 
 
-async def proxy_request(request: Request, target_url: str):
+async def proxy_request(request: Request, target_url: str) -> Response:
     """
     Send a proxy request to the target URL.
 
@@ -37,10 +37,18 @@ async def proxy_request(request: Request, target_url: str):
     if content_type == "text/event-stream":
 
         def generate():
-            for line in resp.iter_lines(delimiter=b"\n\n"):
-                if line:
-                    yield line + b"\n\n"
+            try:
+                for line in resp.iter_lines():
+                    if line:
+                        if line[0:12] == b"data: [DONE]":
+                            yield b"data: [DONE]\n\n"
+                            break
+                        yield line + b"\n\n"
+            finally:
+                resp.close()
 
         return Response(generate(), status=resp.status_code, headers=resp_headers)
     else:
-        return Response(resp.content, status=resp.status_code, headers=resp_headers)
+        response = Response(resp.content, status=resp.status_code, headers=resp_headers)
+        resp.close()
+        return response
