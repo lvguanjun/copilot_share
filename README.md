@@ -43,7 +43,7 @@
 
     部分配置说明：
 
-    1. `server_config["token"]` ：自定义鉴权，用于拦截非鉴权请求，若无需要可设置为 None ，若使用 copilot-chat 且需要鉴权的情况下，可将本地的 github token 添加到该列表，**因为改 copilot-chat 的插件插入自定义 token 好麻烦**。
+    1. `server_config["token"]` ：自定义鉴权，用于拦截非鉴权请求，若无需要可设置为 None 。
     2. `GITHUB_TOKEN` ：即具备 copilot 权限账号的 token ，获取方式详见 [GITHUB TOKEN 获取](#github-token-获取)
     3. `LOG_DEBUG` ：是否以 debug 模式记录日志。
 
@@ -137,6 +137,9 @@ sh scrpits/vscode.sh --copilot 123456 http://127.0.0.1:8080
 
 # copilot chat 也代理 copilot prompt
 sh scrpits/vscode.sh --chat --copilot 123456 http://127.0.0.1:8080
+
+# 使用 cocopilot 代理 token 获取，且支持 copilot chat
+sh scrpits/vscode.sh --chat ghu_ThisIsARealFreeCopilotKeyByCoCopilot https://api.cocopilot.org
 ```
 
 > `http://127.0.0.1:8080` 即代理服务器地址。
@@ -156,7 +159,7 @@ sh scrpits/vscode.sh --chat --copilot 123456 http://127.0.0.1:8080
 
 1. JetBrains 系列 IDE 登录插件后 %userprofile%\AppData\Local\github-copilot\hosts.json 中会记录 token ，以 ghu_ 开头的字符串。
 
-2. vscode 可以登录插件后**抓包获取 token** ，以 gho_ 开头的字符串。不会抓包可以暂时忽视 GITHUB_TOKEN ，填写一个虚拟的字符串先启动代理服务器，然后使用 `--chat` 参数调用脚本修改本地插件后触发请求，查看 app.log 日志提取到 GITHUB_TOKEN ，更新 config.py 重启服务器即可。
+2. vscode 可以登录插件后**抓包获取 token** ，以 gho_ 开头的字符串。
 
     ![log](readme/log.png)
 
