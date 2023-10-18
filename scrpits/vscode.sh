@@ -9,6 +9,8 @@ echo_r() {
 usage() {
     echo    "Usage: sh $0 [--copilot] [--chat] [--help] <custom_token> <custom_api_url>"
     echo_r  "  用于设置从代理获取 copilot 相关功能信息"
+    echo    "  <custom_token>: 自定义代理鉴权"
+    echo    "  <custom_api_url>: 自定义代理地址"
     echo    "  --chat: 同时开启 copilot chat 功能"
     echo    "  --copilot: 代理 token 获取外，同时同步代理提示"
     echo    "  --help: 帮助信息"
