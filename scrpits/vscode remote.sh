@@ -52,7 +52,7 @@ fi
 GITHUB_TOKEN=$1
 GITHUB_API_URL=$2
 
-EXTENSIONS_DIR="$HOME/.vscode/extensions"
+EXTENSIONS_DIR="$HOME/.vscode-server/extensions"
 if [ ! -d "$EXTENSIONS_DIR" ]; then
     echo "ERROR: VSCode extensions directory not found!"
     exit 1

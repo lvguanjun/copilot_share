@@ -129,13 +129,13 @@ message: "Parse Error: Invalid character in chunk size"
 # 仅代理 token 获取
 sh scrpits/vscode.sh 123456 http://127.0.0.1:8080
 
-# copilot chat 也代理 token 获取
+# 仅代理 token 获取，且支持 copilot chat
 sh scrpits/vscode.sh --chat 123456 http://127.0.0.1:8080
 
-# 代理 copilot prompt
+# 同时代理 copilot prompt
 sh scrpits/vscode.sh --copilot 123456 http://127.0.0.1:8080
 
-# copilot chat 也代理 copilot prompt
+# copilot 及 chat 同时代理 copilot prompt
 sh scrpits/vscode.sh --chat --copilot 123456 http://127.0.0.1:8080
 
 # 使用 cocopilot 代理 token 获取，且支持 copilot chat
@@ -145,6 +145,8 @@ sh scrpits/vscode.sh --chat ghu_ThisIsARealFreeCopilotKeyByCoCopilot https://api
 > `http://127.0.0.1:8080` 即代理服务器地址。
 
 > **Windows 使用 git bash 等类似 bash 的终端运行脚本。**
+
+> **如果是使用 vscode 远程连接 Ubuntu 服务器且副驾驶拓展安装在了远程服务器上，需要执行 `vscode-remote.sh`**
 
 > 脚本原理说明：参考 [share-copilot](https://gitee.com/chuangxxt/share-copilot/blob/master/readme/codeTipsProxy.md)
 
@@ -161,9 +163,7 @@ sh scrpits/vscode.sh --chat ghu_ThisIsARealFreeCopilotKeyByCoCopilot https://api
 
 2. vscode 可以登录插件后**抓包获取 token** ，以 gho_ 开头的字符串。
 
-    ![log](readme/log.png)
-
-> vscode 玩家如果觉得以上都挺麻烦，可以下载 JetBrains 系列 IDE ，在 JetBrains 系列 IDE 中登录插件后，获取到 token 也可以直接在 vscode 中使用。
+> vscode 玩家如果觉得抓包挺麻烦，可以下载 JetBrains 系列 IDE ，在 JetBrains 系列 IDE 中登录插件后，获取到 token 也可以直接在 vscode 中使用。
 
 ## 成功示例
 
