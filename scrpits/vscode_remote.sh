@@ -103,7 +103,7 @@ if [ "$COPILOT" = true ]; then
     delimiter='|'
     sed -ri "s${delimiter}https://copilot-proxy.githubusercontent.com${delimiter}${GITHUB_API_URL}${delimiter}g" "$EXTENSION_FILE"
     if [ "$CHAT" = true ]; then
-        sed -ri "s${delimiter}https://copilot-proxy.githubusercontent.com${delimiter}${GITHUB_API_URL}${delimiter}g" "$EXTENSION_CHAT_FILE"
+        sed -ri "s${delimiter}https://api.githubcopilot.com${delimiter}${GITHUB_API_URL}${delimiter}g" "$EXTENSION_CHAT_FILE"
     fi
     echo "copilot proxy enabled"
 fi

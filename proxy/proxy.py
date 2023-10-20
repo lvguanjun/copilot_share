@@ -30,25 +30,6 @@ async def proxy_request(request: Request, target_url: str) -> Response:
         data=request_body,
         stream=True,
     )
-    content_type = resp.headers.get("Content-Type", "").lower()
-    resp_headers = dict(resp.headers)
-
-    # SEE响应需要分块传输
-    if content_type == "text/event-stream":
-
-        def generate():
-            try:
-                for line in resp.iter_lines():
-                    if line:
-                        if line[0:12] == b"data: [DONE]":
-                            yield b"data: [DONE]\n\n"
-                            break
-                        yield line + b"\n\n"
-            finally:
-                resp.close()
-
-        return Response(generate(), status=resp.status_code, headers=resp_headers)
-    else:
-        response = Response(resp.content, status=resp.status_code, headers=resp_headers)
-        resp.close()
-        return response
+    return Response(
+        resp.iter_content(1024), content_type=resp.headers.get("content-type")
+    )

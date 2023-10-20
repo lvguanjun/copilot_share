@@ -43,8 +43,8 @@ TELEMETRY_ROUTE = "/telemetry"
 NEED_TELEMETRY = False
 
 # copilot-chat接口相关
-CHAT_COMPLETION_URL = "https://copilot-proxy.githubusercontent.com/v1/chat/completions"
-CHAT_COMPLETION_ROUTE = "/v1/chat/completions"
+CHAT_COMPLETION_URL = "https://api.githubcopilot.com/chat/completions"
+CHAT_COMPLETION_ROUTE = "/chat/completions"
 
 
 # 其他
