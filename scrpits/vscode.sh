@@ -89,8 +89,8 @@ if [ "$CHAT" = true ]; then
 fi
 
 delimiter='|'
-sed -ri "s${delimiter}^(process.env.CODESPACES=\"true\";process.env.GITHUB_TOKEN.*)${delimiter}// \1${delimiter}g" "$EXTENSION_FILE"
-sed -ri "1i process.env.CODESPACES=\"true\";process.env.GITHUB_TOKEN=\"$GITHUB_TOKEN\";process.env.GITHUB_SERVER_URL=\"https://github.com\";process.env.GITHUB_API_URL=\"$GITHUB_API_URL\";" "$EXTENSION_FILE"
+sed -ri "s${delimiter}(getTokenUrl\([^)]+\))\{return [^}]+\}${delimiter}\1\{return \"${GITHUB_API_URL}/copilot_internal/v2/token\"\}${delimiter}g" "$EXTENSION_FILE"
+sed -ri 's'"${delimiter}"'(getTokenUrl\([^)]+\);try\{[^`]+)Authorization:`[^`]+`'"${delimiter}"'\1Authorization:`token '"${GITHUB_TOKEN}"'`'"${delimiter}"'g' "$EXTENSION_FILE"
 
 if [ "$CHAT" = true ]; then
     delimiter='|'
