@@ -98,11 +98,13 @@ if [ "$CHAT" = true ]; then
     fi
 fi
 
+fake_user_info='{"id":"1","account":{"label":"Copilot","id":"1"},"scopes":["user:email"],"accessToken":"accessToken"}'
+
 delimiter='|'
 sed -ri "s${delimiter}(getTokenUrl\([^)]+\))\{return [^}]+\}${delimiter}\1\{return \"${GITHUB_API_URL}/copilot_internal/v2/token\"\}${delimiter}g" "$EXTENSION_FILE"
 sed -ri 's'"${delimiter}"'(getTokenUrl\([^)]+\);try\{[^`]+)Authorization:`[^`]+`'"${delimiter}"'\1Authorization:`token '"${GITHUB_TOKEN}"'`'"${delimiter}"'g' "$EXTENSION_FILE"
 # 注入账号信息
-sed -ri "s${delimiter}(if\(!([^)]+)\)[^)]*GitHub login failed)${delimiter}\2=\{account:\{label:\"Copilot\"},accessToken:\"accessToken\"\};\1${delimiter}g" "$EXTENSION_FILE"
+sed -ri "s${delimiter}(if\(!([^)]+)\)[^)]*GitHub login failed)${delimiter}if\(!\2\)\2=${fake_user_info};\1${delimiter}g" "$EXTENSION_FILE"
 # 移除遥测接口
 sed -ri "s${delimiter}https://copilot-telemetry.githubusercontent.com/telemetry${delimiter}${delimiter}g" "$EXTENSION_FILE"
 
@@ -111,7 +113,7 @@ if [ "$CHAT" = true ]; then
     sed -ri "s${delimiter}(getTokenUrl\([^)]+\))\{return [^}]+\}${delimiter}\1\{return \"${GITHUB_API_URL}/copilot_internal/v2/token\"\}${delimiter}g" "$EXTENSION_CHAT_FILE"
     sed -ri 's'"${delimiter}"'(getTokenUrl\([^)]+\);try\{[^`]+)Authorization:`[^`]+`'"${delimiter}"'\1Authorization:`token '"${GITHUB_TOKEN}"'`'"${delimiter}"'g' "$EXTENSION_CHAT_FILE"
     # 注入账号信息
-    sed -ri "s${delimiter}(if\(!([^)]+)\)[^)]*GitHub login failed)${delimiter}\2=\{account:\{label:\"Copilot\"},accessToken:\"accessToken\"\};\1${delimiter}g" "$EXTENSION_CHAT_FILE"
+    sed -ri "s${delimiter}(if\(!([^)]+)\)[^)]*GitHub login failed)${delimiter}if\(!\2\)\2=${fake_user_info};\1${delimiter}g" "$EXTENSION_CHAT_FILE"
     # 移除遥测接口
     sed -ri "s${delimiter}https://copilot-telemetry.githubusercontent.com/telemetry${delimiter}${delimiter}g" "$EXTENSION_CHAT_FILE"
     echo "Chat enabled"
