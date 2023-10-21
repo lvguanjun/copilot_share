@@ -67,14 +67,14 @@ if [ ! -d "$EXTENSIONS_DIR" ]; then
     exit 1
 fi
 
-COPILOT_DIR=$(ls -lt "$EXTENSIONS_DIR" | grep '^d' | awk '{print $9}' | grep -E '^github\.copilot-[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
+COPILOT_DIR=$(ls -lt "$EXTENSIONS_DIR" | grep '^d' | awk '{print $9}' | grep -E '^github\.copilot-[0-9]+\.[0-9]+\.[0-9]+/?$' | sort -rn | head -n 1)
 if [ -z "$COPILOT_DIR" ]; then
     echo_r "ERROR: Copilot extension not found!"
     exit 1
 fi
 
 if [ "$CHAT" = true ]; then
-    COPILOT_CHAT_DIR=$(ls -lt "$EXTENSIONS_DIR" | grep '^d' | awk '{print $9}' | grep -E '^github\.copilot-chat-[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)
+    COPILOT_CHAT_DIR=$(ls -lt "$EXTENSIONS_DIR" | grep '^d' | awk '{print $9}' | grep -E '^github\.copilot-chat-[0-9]+\.[0-9]+\.[0-9]+/?$' | sort -rn | head -n 1)
     if [ -z "$COPILOT_CHAT_DIR" ]; then
         echo_r "ERROR: Copilot chat extension not found!"
         exit 1
