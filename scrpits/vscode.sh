@@ -7,6 +7,7 @@ echo_r() {
 usage() {
     echo    "Usage: sh $0 [--copilot] [--chat] [--remote] [--help] <custom_token> <custom_api_url>"
     echo_r  "  用于设置客户端从代理服务器而不是Github获取copilot token及提示"
+    echo_r  "  貌似新版插件先校验登录状态后获取 copilot token ，若提示 'Sign in to use GitHub Copilot.' 建议登录账号尝试（登录账号无需 copilot 权限）"
     echo    "  <custom_token>: 自定义代理鉴权"
     echo    "  <custom_api_url>: 自定义代理地址"
     echo    "  --chat: 同时开启 copilot chat 功能"
