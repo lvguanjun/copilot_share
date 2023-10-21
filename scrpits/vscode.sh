@@ -7,7 +7,7 @@ echo_r() {
 usage() {
     echo    "Usage: sh $0 [--copilot] [--chat] [--remote] [--help] <custom_token> <custom_api_url>"
     echo_r  "  用于设置客户端从代理服务器而不是Github获取copilot token及提示"
-    echo_r  "  貌似新版插件先校验登录状态后获取 copilot token ，若提示 'Sign in to use GitHub Copilot.' 建议登录账号尝试（登录账号无需 copilot 权限）"
+    echo_r  "  当前脚本注入账号信息，当 copilot 提示登录失败，点击 retry 即可"
     echo    "  <custom_token>: 自定义代理鉴权"
     echo    "  <custom_api_url>: 自定义代理地址"
     echo    "  --chat: 同时开启 copilot chat 功能"
@@ -101,6 +101,8 @@ fi
 delimiter='|'
 sed -ri "s${delimiter}(getTokenUrl\([^)]+\))\{return [^}]+\}${delimiter}\1\{return \"${GITHUB_API_URL}/copilot_internal/v2/token\"\}${delimiter}g" "$EXTENSION_FILE"
 sed -ri 's'"${delimiter}"'(getTokenUrl\([^)]+\);try\{[^`]+)Authorization:`[^`]+`'"${delimiter}"'\1Authorization:`token '"${GITHUB_TOKEN}"'`'"${delimiter}"'g' "$EXTENSION_FILE"
+# 注入账号信息
+sed -ri "s${delimiter}(if\(!([^)]+)\)[^)]*GitHub login failed)${delimiter}\2=\{account:\{label:\"Copilot\"},accessToken:\"accessToken\"\};\1${delimiter}g" "$EXTENSION_FILE"
 # 移除遥测接口
 sed -ri "s${delimiter}https://copilot-telemetry.githubusercontent.com/telemetry${delimiter}${delimiter}g" "$EXTENSION_FILE"
 
@@ -108,6 +110,8 @@ if [ "$CHAT" = true ]; then
     delimiter='|'
     sed -ri "s${delimiter}(getTokenUrl\([^)]+\))\{return [^}]+\}${delimiter}\1\{return \"${GITHUB_API_URL}/copilot_internal/v2/token\"\}${delimiter}g" "$EXTENSION_CHAT_FILE"
     sed -ri 's'"${delimiter}"'(getTokenUrl\([^)]+\);try\{[^`]+)Authorization:`[^`]+`'"${delimiter}"'\1Authorization:`token '"${GITHUB_TOKEN}"'`'"${delimiter}"'g' "$EXTENSION_CHAT_FILE"
+    # 注入账号信息
+    sed -ri "s${delimiter}(if\(!([^)]+)\)[^)]*GitHub login failed)${delimiter}\2=\{account:\{label:\"Copilot\"},accessToken:\"accessToken\"\};\1${delimiter}g" "$EXTENSION_CHAT_FILE"
     # 移除遥测接口
     sed -ri "s${delimiter}https://copilot-telemetry.githubusercontent.com/telemetry${delimiter}${delimiter}g" "$EXTENSION_CHAT_FILE"
     echo "Chat enabled"

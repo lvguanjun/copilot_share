@@ -7,7 +7,11 @@
 
 该服务作为代理服务器，中转 copilot 插件的相关请求，支持多个用户共享同一个 copilot 账号，支持非代理情况下使用 copilot 。适用于拥有 copilot 权限的账号使用者，分享 copilot 权限给小伙伴。
 
-> **貌似新版插件先校验登录状态后获取 copilot token ，若提示 "Sign in to use GitHub Copilot." 建议登录账号尝试（登录账号无需 copilot 权限）**
+~~> **貌似新版插件先校验登录状态后获取 copilot token ，若提示 "Sign in to use GitHub Copilot." 建议登录账号尝试（登录账号无需 copilot 权限）**~~
+
+> 当前脚本已注入账号信息，当 copilot 提示登录失败，点击 retry 即可。
+>
+> 注入信息为: `{account: {label: "Copilot"}, accessToken: "accessToken"}`
 
 > 代理服务器需要能够访问 github.com 。
 
