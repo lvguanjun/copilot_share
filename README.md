@@ -186,6 +186,12 @@ sh scrpits/vscode.sh --chat ghu_ThisIsARealFreeCopilotKeyByCoCopilot https://api
 
     ![server](readme/server.png)
 
+## Feature
+
+1. 新增 copilot chat 代理到 chatgpt ，可以使用 chatgpt-4 模型回答问题。
+
+> 鸣谢 zhile 大佬的 [pandora](https://github.com/zhile-io/pandora)
+
 ## 其他
 
 1. 该仓库参考了 [share-copilot](https://gitee.com/chuangxxt/share-copilot) 和 zhile 大佬的 [cocopilot](https://zhile.io/2023/09/09/github-got-banned.html) , 感恩！

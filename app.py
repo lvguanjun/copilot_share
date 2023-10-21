@@ -25,6 +25,7 @@ from config import (
     server_config,
 )
 from proxy.github import get_copilot_token
+from proxy.gpt import proxy_gpt
 from proxy.proxy import proxy_request
 from utils.decorators import auth_required, conditional_proxy_request
 from utils.logger import log
@@ -74,7 +75,7 @@ async def proxy_copilot_chat_completion():
     """
     代理请求 copilot-chat 的提示接口
     """
-    res = await proxy_request(request, CHAT_COMPLETION_URL)
+    res = await proxy_gpt(request, model="gpt-4-32k")
     return res
 
 

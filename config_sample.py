@@ -51,3 +51,11 @@ TOKEN_MAX_ERR_COUNT = 5
 
 # log debug模式
 LOG_DEBUG = False
+
+
+# chatgpt 相关接口/示例提供的 pandora 接口，也可以用官方接口
+# 感谢 zhile 大佬
+
+GPT_URL = "https://ai.fakeopen.com/v1"
+GPT_CHAT_ROUTE = "/chat/completions"
+GPT_KEY = "pk-7cis4Y3tnjZCYy6XN8ET_vvt_sWKca7yJbU********"
