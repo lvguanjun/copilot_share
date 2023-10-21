@@ -35,13 +35,6 @@ COMPLETION_URL = (
 )
 COMPLETION_ROUTE = "/v1/engines/copilot-codex/completions"
 
-# 遥测数据接口相关
-# 不确定，copilot chat提供的可能性
-TELEMETRY_URL = "https://copilot-telemetry.githubusercontent.com/telemetry"
-TELEMETRY_ROUTE = "/telemetry"
-# 感觉没啥必要请求telemetry接口，通过配置决定是否请求
-NEED_TELEMETRY = False
-
 # copilot-chat接口相关
 CHAT_COMPLETION_URL = "https://api.githubcopilot.com/chat/completions"
 CHAT_COMPLETION_ROUTE = "/chat/completions"

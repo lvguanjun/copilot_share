@@ -21,9 +21,6 @@ from config import (
     COMPLETION_URL,
     GET_TOKEN_ROUTE,
     GITHUB_TOKEN,
-    NEED_TELEMETRY,
-    TELEMETRY_ROUTE,
-    TELEMETRY_URL,
     TOKEN_MAX_ERR_COUNT,
     server_config,
 )
@@ -67,18 +64,6 @@ async def proxy_copilot_completion():
     代理请求 copilot 的提示接口
     """
     res = await proxy_request(request, COMPLETION_URL)
-    return res
-
-
-@app.route(TELEMETRY_ROUTE, methods=["POST"])
-async def proxy_copilot_telemetry():
-    """
-    代理请求 copilot 的遥测接口
-    若不需要遥测，则直接返回 200
-    """
-    if not NEED_TELEMETRY:
-        return jsonify({}), 200
-    res = await proxy_request(request, TELEMETRY_URL)
     return res
 
 
