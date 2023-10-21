@@ -9,7 +9,7 @@
 
 ~~> **貌似新版插件先校验登录状态后获取 copilot token ，若提示 "Sign in to use GitHub Copilot." 建议登录账号尝试（登录账号无需 copilot 权限）**~~
 
-> 当前脚本已注入账号信息，当 copilot 提示登录失败，点击 retry 即可。
+> 当前脚本以注入账号信息，当 copilot 插件提示登录时，主动点×关闭后 retry 即可
 >
 > 注入信息为: `{account: {label: "Copilot"}, accessToken: "accessToken"}`
 
