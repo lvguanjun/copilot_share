@@ -45,6 +45,7 @@
 
     1. `server_config["token"]` ：自定义鉴权，用于拦截非鉴权请求，若无需要可设置为 None 。
     2. `GITHUB_TOKEN` ：即具备 copilot 权限账号的 token ，获取方式详见 [GITHUB TOKEN 获取](#github-token-获取)
+    3. `PROXY_COMPLETION_REQUEST`：是否允许代理 copilot prompt 的请求，默认为 False ，减轻代理服务器压力。
     3. `LOG_DEBUG` ：是否以 debug 模式记录日志。
 
 2. 配置虚拟环境

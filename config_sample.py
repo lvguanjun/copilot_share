@@ -42,6 +42,10 @@ CHAT_COMPLETION_ROUTE = "/chat/completions"
 
 # 其他
 
+# 是否开启代理“提示请求”
+# 作为代理服务端，应该可以自定义是否开启代理“提示请求”，而不是仅由客户端是否配置决定
+PROXY_COMPLETION_REQUEST = False
+
 # 一个github token最多请求失败次数
 TOKEN_MAX_ERR_COUNT = 5
 

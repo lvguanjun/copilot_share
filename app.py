@@ -26,7 +26,7 @@ from config import (
 )
 from proxy.github import get_copilot_token
 from proxy.proxy import proxy_request
-from utils.decorators import auth_required
+from utils.decorators import auth_required, conditional_proxy_request
 from utils.logger import log
 
 app = Flask(__name__)
@@ -59,6 +59,7 @@ async def get_token():
 
 
 @app.route(COMPLETION_ROUTE, methods=["POST"])
+@conditional_proxy_request(COMPLETION_URL)
 async def proxy_copilot_completion():
     """
     代理请求 copilot 的提示接口
@@ -68,6 +69,7 @@ async def proxy_copilot_completion():
 
 
 @app.route(CHAT_COMPLETION_ROUTE, methods=["POST"])
+@conditional_proxy_request(CHAT_COMPLETION_URL)
 async def proxy_copilot_chat_completion():
     """
     代理请求 copilot-chat 的提示接口

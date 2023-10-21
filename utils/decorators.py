@@ -8,12 +8,12 @@
 """
 
 
-from functools import wraps
 import logging
+from functools import wraps
 
-from flask import jsonify, request
+from flask import jsonify, redirect, request
 
-from config import server_config
+from config import PROXY_COMPLETION_REQUEST, server_config
 from utils.logger import log
 
 
@@ -32,3 +32,16 @@ def auth_required(fun):
         return jsonify(err_msg), 401
 
     return wrapper
+
+
+def conditional_proxy_request(request_url):
+    def decorator(fun):
+        @wraps(fun)
+        async def wrapper(*args, **kwargs):
+            if PROXY_COMPLETION_REQUEST:
+                return await fun(*args, **kwargs)
+            return redirect(request_url, code=307)
+
+        return wrapper
+
+    return decorator
