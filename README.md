@@ -7,9 +7,11 @@
 
 该服务作为代理服务器，中转 copilot 插件的相关请求，支持多个用户共享同一个 copilot 账号，支持非代理情况下使用 copilot 。适用于拥有 copilot 权限的账号使用者，分享 copilot 权限给小伙伴。
 
+> **如果只是想使用 copilot ，可直接使用 zhile 大佬的 [CoCopilot插件](https://marketplace.visualstudio.com/items?itemName=zhile-io.cocopilot)，也可以 vscode 插件商店搜索 `CoCopilot` 安装。感恩大佬，给大佬插件五星好评呀:star::star::star::star::star: 。**
+
 ~~> **貌似新版插件先校验登录状态后获取 copilot token ，若提示 "Sign in to use GitHub Copilot." 建议登录账号尝试（登录账号无需 copilot 权限）**~~
 
-> 当前脚本以注入账号信息，当 copilot 插件提示登录时，主动点×关闭后 retry 即可
+> 当前脚本以注入账号信息，当 copilot 插件提示登录时，主动点×关闭后 retry 即可。
 >
 > 当前注入信息为: `{"id":"1","account":{"label":"Copilot","id":"1"},"scopes":["user:email"],"accessToken":"accessToken"}`
 
