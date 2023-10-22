@@ -11,7 +11,7 @@
 
 > 当前脚本以注入账号信息，当 copilot 插件提示登录时，主动点×关闭后 retry 即可
 >
-> 注入信息为: `{account: {label: "Copilot"}, accessToken: "accessToken"}`
+> 当前注入信息为: `{"id":"1","account":{"label":"Copilot","id":"1"},"scopes":["user:email"],"accessToken":"accessToken"}`
 
 > 代理服务器需要能够访问 github.com 。
 
@@ -153,7 +153,7 @@ sh scrpits/vscode.sh --chat ghu_ThisIsARealFreeCopilotKeyByCoCopilot https://api
 
 > **Windows 使用 git bash 等类似 bash 的终端运行脚本。**
 
-> **如果是使用 vscode 远程连接 Ubuntu 服务器且副驾驶拓展安装在了远程服务器上，需要执行 `vscode-remote.sh`**
+> **如果是使用 vscode 远程连接 Ubuntu 服务器且副驾驶拓展安装在了远程服务器上，需要添加 `--remote` 选项**
 
 > 脚本原理说明：参考 [share-copilot](https://gitee.com/chuangxxt/share-copilot/blob/master/readme/codeTipsProxy.md)
 
