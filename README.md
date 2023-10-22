@@ -186,11 +186,20 @@ sh scrpits/vscode.sh --chat ghu_ThisIsARealFreeCopilotKeyByCoCopilot https://api
 
     ![server](readme/server.png)
 
-## Feature
+## 功能增强
 
-1. 新增 copilot chat 代理到 chatgpt ，可以使用 chatgpt-4 模型回答问题。
+1. 新增 copilot-chat 代理到 chatgpt ，可以使用 chatgpt-4 模型回答问题。
+
+> 说明：当前 copilot-chat 响应为 `application/json` ，而 chatgpt-4 响应为 `text/event-stream; charset=utf-8` ，当前实测两种响应类型在 vscode 均可以正常对话，但不保证后续版本 vscode 仍然可以正常对话。
 
 > 鸣谢 zhile 大佬的 [pandora](https://github.com/zhile-io/pandora)
+
+## Todo
+
+1. 反代的函数处理采用异步，但是没有使用异步的库，后续考虑使用异步的库进行处理。
+2. postman 307 重定向时会丢失 Authorization ，当设置 `PROXY_COMPLETION_REQUEST = False` 时，会无法使用 postman 调试相关“提示请求”。
+
+    客户端问题，vsocde能正常使用，因此当前仅考虑从 postman 查找是否存在选项解决。
 
 ## 其他
 

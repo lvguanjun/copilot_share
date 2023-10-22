@@ -56,6 +56,8 @@ LOG_DEBUG = False
 # chatgpt 相关接口/示例提供的 pandora 接口，也可以用官方接口
 # 感谢 zhile 大佬
 
-GPT_URL = "https://ai.fakeopen.com/v1"
-GPT_CHAT_ROUTE = "/chat/completions"
+# 是否使用 chatgpt 代理 copilot-chat，需要 PROXY_COMPLETION_REQUEST 为 True
+USE_GPT_PROXY = False
+GPT_CHAT_URL = "https://ai.fakeopen.com/v1/chat/completions"
 GPT_KEY = "pk-7cis4Y3tnjZCYy6XN8ET_vvt_sWKca7yJbU********"
+GPT_MODEL = "gpt-4-32k"  # gpt-3.5-turbo, gpt-4, gpt-4-32k

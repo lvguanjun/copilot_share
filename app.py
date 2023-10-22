@@ -21,14 +21,18 @@ from config import (
     COMPLETION_URL,
     GET_TOKEN_ROUTE,
     GITHUB_TOKEN,
+    GPT_CHAT_URL,
+    GPT_KEY,
+    GPT_MODEL,
     TOKEN_MAX_ERR_COUNT,
+    USE_GPT_PROXY,
     server_config,
 )
 from proxy.github import get_copilot_token
-from proxy.gpt import proxy_gpt
 from proxy.proxy import proxy_request
 from utils.decorators import auth_required, conditional_proxy_request
 from utils.logger import log
+from utils.utils import fake_request
 
 app = Flask(__name__)
 
@@ -75,7 +79,19 @@ async def proxy_copilot_chat_completion():
     """
     代理请求 copilot-chat 的提示接口
     """
-    res = await proxy_gpt(request, model="gpt-4-32k")
+
+    if USE_GPT_PROXY:
+        max_retry = 3
+        headers = {
+            "Authorization": f"Bearer {GPT_KEY}",
+            "content-type": "application/json",
+        }
+        json_data = request.get_json()
+        json_data["model"] = GPT_MODEL
+        new_request = fake_request("POST", headers=headers, json=json_data)
+        res = await proxy_request(new_request, GPT_CHAT_URL, max_retry=max_retry)
+    else:
+        res = await proxy_request(request, CHAT_COMPLETION_URL)
     return res
 
 
