@@ -7,11 +7,13 @@
 
 该服务作为代理服务器，中转 copilot 插件的相关请求，支持多个用户共享同一个 copilot 账号，支持非代理情况下使用 copilot 。适用于拥有 copilot 权限的账号使用者，分享 copilot 权限给小伙伴。
 
+> **如果只是想使用 copilot ，可直接使用 zhile 大佬的 [CoCopilot插件](https://marketplace.visualstudio.com/items?itemName=zhile-io.cocopilot)，也可以 vscode 插件商店搜索 `CoCopilot` 安装。感恩大佬，给大佬插件五星好评呀:star::star::star::star::star: 。**
+
 ~~> **貌似新版插件先校验登录状态后获取 copilot token ，若提示 "Sign in to use GitHub Copilot." 建议登录账号尝试（登录账号无需 copilot 权限）**~~
 
-> 当前脚本以注入账号信息，当 copilot 插件提示登录时，主动点×关闭后 retry 即可
+> 当前脚本以注入账号信息，当 copilot 插件提示登录时，主动点×关闭后 retry 即可。
 >
-> 注入信息为: `{account: {label: "Copilot"}, accessToken: "accessToken"}`
+> 当前注入信息为: `{"id":"1","account":{"label":"Copilot","id":"1"},"scopes":["user:email"],"accessToken":"accessToken"}`
 
 > 代理服务器需要能够访问 github.com 。
 
@@ -153,7 +155,7 @@ sh scrpits/vscode.sh --chat ghu_ThisIsARealFreeCopilotKeyByCoCopilot https://api
 
 > **Windows 使用 git bash 等类似 bash 的终端运行脚本。**
 
-> **如果是使用 vscode 远程连接 Ubuntu 服务器且副驾驶拓展安装在了远程服务器上，需要执行 `vscode-remote.sh`**
+> **如果是使用 vscode 远程连接 Ubuntu 服务器且副驾驶拓展安装在了远程服务器上，需要添加 `--remote` 选项**
 
 > 脚本原理说明：参考 [share-copilot](https://gitee.com/chuangxxt/share-copilot/blob/master/readme/codeTipsProxy.md)
 
@@ -185,6 +187,21 @@ sh scrpits/vscode.sh --chat ghu_ThisIsARealFreeCopilotKeyByCoCopilot https://api
 - server 端展示
 
     ![server](readme/server.png)
+
+## 功能增强
+
+1. 新增 copilot-chat 代理到 chatgpt ，可以使用 chatgpt-4 模型回答问题。
+
+> 说明：当前 copilot-chat 响应为 `application/json` ，而 chatgpt-4 响应为 `text/event-stream; charset=utf-8` ，当前实测两种响应类型在 vscode 均可以正常对话，但不保证后续版本 vscode 仍然可以正常对话。
+
+> 鸣谢 zhile 大佬的 [pandora](https://github.com/zhile-io/pandora)
+
+## Todo
+
+1. 反代的函数处理采用异步，但是没有使用异步的库，后续考虑使用异步的库进行处理。
+2. postman 307 重定向时会丢失 Authorization ，当设置 `PROXY_COMPLETION_REQUEST = False` 时，会无法使用 postman 调试相关“提示请求”。
+
+    客户端问题，vsocde能正常使用，因此当前仅考虑从 postman 查找是否存在选项解决。
 
 ## 其他
 
