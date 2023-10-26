@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-@File    :   config_sample.py
+@File    :   config.py
 @Time    :   2023/09/28 23:24:26
 @Author  :   lvguanjun
-@Desc    :   config_sample.py
+@Desc    :   config.py
 """
 
 

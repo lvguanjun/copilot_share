@@ -47,7 +47,7 @@
 
 ### 代理服务器
 
-1. 复制 config.sample.py 为 config.py ，并根据实际情况修改其中的配置
+1. 复制 config.py.sample 为 config.py ，并根据实际情况修改其中的配置
 
     部分配置说明：
 
