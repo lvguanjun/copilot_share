@@ -36,4 +36,8 @@ def log_unmatched_routes():
 
 
 if __name__ == "__main__":
-    app.run(host=server_config["host"], port=server_config["port"], debug=False)
+    app.run(
+        host=server_config["host"],
+        port=server_config["port"],
+        debug=False,
+    )

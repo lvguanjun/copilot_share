@@ -49,6 +49,12 @@ PROXY_COMPLETION_REQUEST = False
 # 一个github token最多请求失败次数
 TOKEN_MAX_ERR_COUNT = 5
 
+# 是否使用企业认证鉴权
+USE_ENTERPRISE_AUTH = True
+
+# 企业认证域名 - 可通过更改hosts文件修改
+ENTERPRISE_AUTH_DOMAIN = "example.com:8080"
+
 # log debug模式
 LOG_DEBUG = False
 
