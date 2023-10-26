@@ -7,12 +7,10 @@
 @Desc    :   routes.py
 """
 
-from flask import jsonify, request
+from flask import jsonify
 
 from blueprints.enterprise_auth import enterprise_auth_bp
-from config import server_config
-
-server_url = f"http://{server_config['host']}:{server_config['port']}"
+from config import ENTERPRISE_AUTH_DOMAIN
 
 
 @enterprise_auth_bp.route("/login/device/code", methods=["POST"])
@@ -23,9 +21,9 @@ async def get_device_code_post():
             "expires_in": 1800,
             "interval": 3,
             "user_code": "MHUA-ZKH3",
-            "verification_uri": f"{server_url}/login/device",
+            "verification_uri": f"http://{ENTERPRISE_AUTH_DOMAIN}/login/device",
             "verification_uri_complete": (
-                f"{server_url}/login/device?user_code=MHUA-ZKH3"
+                f"http://{ENTERPRISE_AUTH_DOMAIN}/login/device?user_code=MHUA-ZKH3"
             ),
         }
     )
