@@ -11,4 +11,4 @@ from flask import Blueprint
 
 proxy_bp = Blueprint("proxy", __name__)
 
-from . import routes, utils
+from . import routes
