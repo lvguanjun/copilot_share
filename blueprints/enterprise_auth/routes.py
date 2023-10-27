@@ -7,24 +7,24 @@
 @Desc    :   routes.py
 """
 
-from flask import jsonify
+from flask import jsonify, request
 
 from blueprints.enterprise_auth import enterprise_auth_bp
-from config import ENTERPRISE_AUTH_DOMAIN
+from blueprints.enterprise_auth.utils import auth
+from config import server_config
 
 
 @enterprise_auth_bp.route("/login/device/code", methods=["POST"])
 async def get_device_code_post():
+    verification_uri = f"{request.url_root}login/device"
     return jsonify(
         {
             "device_code": "H9lX3aAH6FxMOAzeQlqa",
             "expires_in": 1800,
             "interval": 3,
             "user_code": "MHUA-ZKH3",
-            "verification_uri": f"http://{ENTERPRISE_AUTH_DOMAIN}/login/device",
-            "verification_uri_complete": (
-                f"http://{ENTERPRISE_AUTH_DOMAIN}/login/device?user_code=MHUA-ZKH3"
-            ),
+            "verification_uri": verification_uri,
+            "verification_uri_complete": f"{verification_uri}?user_code=MHUA-ZKH3",
         }
     )
 
@@ -35,10 +35,14 @@ async def get_device_code_get():
 
 
 @enterprise_auth_bp.route("/login/oauth/access_token", methods=["POST"])
+@auth.login_required
 async def get_access_token():
+    custom_token = "ghu_notNeedToken"
+    if custom_token := server_config["token"]:
+        custom_token = custom_token[0]
     return jsonify(
         {
-            "access_token": "123456",
+            "access_token": custom_token,
             "scope": "user:email",
             "token_type": "bearer",
         }
@@ -51,8 +55,8 @@ async def get_user():
         {
             "email": "shared@example.com",
             "id": "504573ef6e0bdff9",
-            "login": "Copilot_example",
-            "name": "Copilot_example",
+            "login": "copilot_enterprise",
+            "name": "copilot_enterprise",
         }
     )
 

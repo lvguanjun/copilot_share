@@ -40,6 +40,17 @@ CHAT_COMPLETION_URL = "https://api.githubcopilot.com/chat/completions"
 CHAT_COMPLETION_ROUTE = "/chat/completions"
 
 
+# 企业认证相关
+
+# 是否使用企业认证鉴权
+USE_ENTERPRISE_AUTH = True
+# 企业认证账密，为空字典则无需验证
+ENTERPRISE_AUTH_USERS = {
+    "user1": "password1",
+    "user2": "password2",
+}
+
+
 # 其他
 
 # 是否开启代理“提示请求”
@@ -48,12 +59,6 @@ PROXY_COMPLETION_REQUEST = False
 
 # 一个github token最多请求失败次数
 TOKEN_MAX_ERR_COUNT = 5
-
-# 是否使用企业认证鉴权
-USE_ENTERPRISE_AUTH = True
-
-# 企业认证域名 - 可通过更改hosts文件修改
-ENTERPRISE_AUTH_DOMAIN = "example.com:8080"
 
 # log debug模式
 LOG_DEBUG = False

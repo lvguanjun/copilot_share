@@ -9,6 +9,6 @@
 
 from flask import Blueprint
 
-proxy_bp = Blueprint("proxy", __name__, subdomain="api")
+proxy_bp = Blueprint("proxy", __name__)
 
 from . import routes
