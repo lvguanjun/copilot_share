@@ -53,6 +53,12 @@
 1. 代理服务器可以使用多个 github token ，组成 token 池，减轻单个 token 的压力。
 2. 代理服务器可以将已获取的 copilot token 缓存，减少重复获取 copilot token 的请求。
 
+## 企业认证方案
+
+通过对 `github.copilot.advanced.authProvider` 的配置，将原来的 github.com 认证流程替换为自定义的 enterprise 认证流程，从而实现非登录使用 copilot 的需求。
+
+如果代理服务器配置 `USE_ENTERPRISE_AUTH` 为 True ，则代理服务器会注册一个 enterprise_auth 蓝图，用于处理认证流程。否则不会注册该蓝图，此时代理服务器仅仅代理 copilot 相关的请求。
+
 ## 使用说明
 
 ### 代理服务器
