@@ -164,7 +164,10 @@ message: "Parse Error: Invalid character in chunk size"
     2. `debug.chatOverrideProxyUrl` ：代理服务器地址，仅代理 chat “请求”时添加。
     3. `github-enterprise.uri` ：代理服务器地址，其中 `user:password` 为代理服务器的 BasicAuth 鉴权，代理服务器配置了鉴权时添加正确账密，未配置鉴权则需填任意字符串**占位**，例如 `user:password` 。具体原因详见[子域名规避说明](#其他说明)
 
-3. 重载 vscode 窗口即可
+3. 重载 vscode 窗口
+4. 当 copilot 插件提示登录时，点击登录走正常登录流程即可
+
+    当前登录仅仅走了流程，确保插件js正常加载，不会真正登录，因此不需要担心账号泄露。
 
 > ~~说明：该方式配置刚需域名，如果没有域名，可以通过更改本地hosts文件实现。需要同时添加 `example.com` 和 `api.example.com` 的映射。~~
 
