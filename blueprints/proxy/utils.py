@@ -16,7 +16,7 @@ from flask import Request, Response
 from tenacity import retry, retry_if_result, stop_after_attempt, wait_fixed
 
 from cache.cache_token import get_token_from_cache, set_token_to_cache
-from config import GET_TOKEN_URL
+from config import CLEAR_HEADERS, GET_TOKEN_URL
 from utils.logger import log
 
 
@@ -79,8 +79,9 @@ async def proxy_request(
             log(f"ERROR: {e}", logging.ERROR)
             return None
 
+    for header in CLEAR_HEADERS:
+        request.headers.pop(header, None)
     request_headers = dict(request.headers)
-    request_headers.pop("Host", None)
     request_body = request.data
     request_method = request.method
     resp = _proxy_request(request_method, target_url, request_headers, request_body)

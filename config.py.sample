@@ -72,3 +72,11 @@ USE_GPT_PROXY = False
 GPT_CHAT_URL = "https://ai.fakeopen.com/v1/chat/completions"
 GPT_KEY = "pk-7cis4Y3tnjZCYy6XN8ET_vvt_sWKca7yJbU********"
 GPT_MODEL = "gpt-4-32k"  # gpt-3.5-turbo, gpt-4, gpt-4-32k
+
+# 需要清除的请求头
+CLEAR_HEADERS = [
+    "Host",
+    "X-Real-Ip",
+    "X-Forwarded-For",
+    "X-Forwarded-Proto",
+]

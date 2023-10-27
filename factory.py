@@ -12,10 +12,11 @@ from flask import Flask
 from blueprints.enterprise_auth import enterprise_auth_bp
 from blueprints.proxy import proxy_bp
 from config import USE_ENTERPRISE_AUTH
-
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 def create_app():
     app = Flask(__name__)
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)  # 支持反向代理
     # 加载配置
 
     # 注册蓝图
