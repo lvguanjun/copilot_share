@@ -40,6 +40,17 @@ CHAT_COMPLETION_URL = "https://api.githubcopilot.com/chat/completions"
 CHAT_COMPLETION_ROUTE = "/chat/completions"
 
 
+# 企业认证相关
+
+# 是否使用企业认证鉴权
+USE_ENTERPRISE_AUTH = True
+# 企业认证账密，为空字典则无需验证
+ENTERPRISE_AUTH_USERS = {
+    "user1": "password1",
+    "user2": "password2",
+}
+
+
 # 其他
 
 # 是否开启代理“提示请求”
