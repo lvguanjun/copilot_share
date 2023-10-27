@@ -195,7 +195,13 @@ server {
 
 ##### 其他说明
 
-1. 当配置正常的 `github-enterprise.uri=http://example.com` 情况下，插件除认证授权逻辑外，其他请求均会发送到 `example.com` 的子域名 `api.example.com` ，因此需要将 `github-enterprise.uri` 配置为域名且需要添加 `api.example.com` 的映射。否则要么错误的 url (such as: api.127.0.0.1)，要么 502 指向不到源站。但似乎配置了 BasicAuth 时，插件不会再向其子域名 `api.example.com` 发送请求，而是直接向域名发请求，因此配置 `github-enterprise.uri` 时，需要带上 BasicAuth 。当然，如果同时配置 `example.com` 和 `api.example.com` 的映射，也可以不配置 BasicAuth ，此时需要关心 dns 和 nginx 的配置，否则会导致请求失败。
+1. 当配置正常的 `github-enterprise.uri=http://example.com` 情况下，插件除认证授权逻辑外，其他请求均会发送到 `example.com` 的子域名 `api.example.com` ，因此需要将 `github-enterprise.uri` 配置为域名且需要添加 `api.example.com` 的映射。否则要么错误的 url (such as: api.127.0.0.1)，要么 502 指向不到源站。但配置了 BasicAuth 后，插件不会再向其子域名 `api.example.com` 发送请求，而是直接向域名发请求，因此配置 `github-enterprise.uri` 时，需要带上 BasicAuth 。当然，如果同时配置 `example.com` 和 `api.example.com` 的映射，也可以不配置 BasicAuth ，此时需要关心 dns 和 nginx 的配置，否则会导致请求失败。
+
+   让我们看看为什么配置了 BasicAuth 后，插件不会再向其子域名 `api.example.com` 发送请求，而是直接向域名发请求。/笑
+
+   插件是这样设置的子域名，`api.${domain}` ，因此 `exapmle.com` -> `api.example.com` ，`127.0.0.1` -> `api.127.0.0.1`，那加了 BasicAuth 的域名则 `user:pass@127.0.0.1` -> `api.user:pass@127.0.0.1` ，也就是说， `api.user` 作为了用户名，因此域名指向无变化。
+
+   > **该功能基于 bug 实现**
 
 #### 方案二、脚本插件修改
 
@@ -273,6 +279,8 @@ sh scrpits/vscode.sh --chat ghu_ThisIsARealFreeCopilotKeyByCoCopilot https://api
     客户端问题，vsocde能正常使用，因此当前仅考虑从 postman 查找是否存在选项解决。
 
 3. 通过携带 BasicAuth 的方法规避了部分请求指向 `api.xxx.xxx` 子域名的问题，但目前原因不明，不确保后续版本是否会出现问题。需要查看插件源码，确定插件的请求逻辑。
+
+    基于子域名拼接 bug 规避了刚需域名及子域名映射的问题。详见 [子域名规避说明](#其他说明)
 
 ## 其他
 
