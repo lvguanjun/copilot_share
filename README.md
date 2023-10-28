@@ -81,6 +81,10 @@
     pip install -r requirements.txt
     ```
 
+    > **如果是 python3.12.0 及以上，aiohttp 可能安装不上，需要自定义 aiohttp 版本为 3.9.0b0 ， `pip install aiohttp==3.9.0b0`**
+    >
+    > https://github.com/aio-libs/aiohttp/issues/7739
+
 3. 代理服务器运行
 
     - 直接运行代理服务器
@@ -133,7 +137,7 @@
             workers = 2  # 工作进程数
             threads = 4  # 指定每个进程开启的线程数
             worker_class = "gevent"  # 指定一个异步处理的库
-            env = prometheus_multiproc_dir = "/tmp"  # 指定一个临时目录，用来存放进程的相关信息
+            env = "prometheus_multiproc_dir=/tmp"  # 指定一个临时目录，用来存放进程的相关信息
             accesslog = "logs/server_access.log"  # 访问日志文件
             errorlog = "logs/server_error.log"  # 错误日志文件
             ```
