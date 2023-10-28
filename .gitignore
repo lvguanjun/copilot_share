@@ -8,8 +8,7 @@ __pycache__
 # log
 app.log
 nohup.out
-server_access.log
-server_error.log
+logs
 
 # config
 config.py

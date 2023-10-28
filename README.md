@@ -105,8 +105,11 @@
             ```
 
             ```bash
-            # 在后台运行
-            nohup gunicorn --bind 127.0.0.1:8080 app:app > nohup.out 2>&1 &
+            # 守护进程运行
+            gunicorn --bind 127.0.0.1:8080 app:app -D
+            # 关闭守护进程
+            ps -ef | grep gunicorn
+            kill -9 pid
             ```
 
         - **高级配置**
@@ -120,23 +123,62 @@
 
             ```bash
             # 使用配置文件启动 gunicorn
-            nohup gunicorn -c gunicorn_config.py app:app > nohup.out 2>&1 &
+            gunicorn -c gunicorn_config.py app:app -D
             ```
 
             `gunicorn_config.py`的示例内容：
 
             ```python
             bind = "127.0.0.1:8080"  # 绑定IP和端口号
-            workers = 1  # 工作进程数
-            accesslog = "server_access.log"  # 访问日志文件
-            errorlog = "server_error.log"  # 错误日志文件
+            workers = 2  # 工作进程数
+            threads = 4  # 指定每个进程开启的线程数
+            worker_class = "gevent"  # 指定一个异步处理的库
+            env = prometheus_multiproc_dir = "/tmp"  # 指定一个临时目录，用来存放进程的相关信息
+            accesslog = "logs/server_access.log"  # 访问日志文件
+            errorlog = "logs/server_error.log"  # 错误日志文件
             ```
 
         > Gunicorn 默认在 8000 端口运行是该工具的预设值。 Gunicorn 不会自动采用 Flask 应用或其他 WSGI 应用设置的其他端口。需要显式地在 Gunicorn 的命令行选项或配置文件中指定端口。
+        >
+        > 若参考上述配置示例启动，如果不存在 logs 目录，则需要创建一个 logs 目录存放日志。
     
     - nginx 反向代理
 
-        当前暂无云服务器，故 nginx 需自行查阅参考配置。
+        ```
+        server {
+            listen 443 ssl http2;
+            listen [::]:443 ssl http2;
+            server_name your_domain;
+
+            ssl_certificate /etc/nginx/ssl/your_domain/bind_domain.pem;
+            ssl_certificate_key /etc/nginx/ssl/your_domain/bind_domain.key;
+            ssl_session_timeout 1d;
+            ssl_session_cache shared:MozSSL:10m;  # about 40000 sessions
+            ssl_session_tickets off;
+
+            # intermediate configuration
+            ssl_protocols TLSv1.2 TLSv1.3;
+            ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305;
+            ssl_prefer_server_ciphers off;
+
+            # HSTS (ngx_http_headers_module is required) (63072000 seconds)
+            add_header Strict-Transport-Security "max-age=63072000" always;
+
+            # OCSP stapling
+            ssl_stapling on;
+            ssl_stapling_verify on;
+
+            location / {
+                proxy_pass http://127.0.0.1:8080;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }
+        }
+        ```
+
+        ssl 相关配置参考 [ssl配置生成器](https://ssl-config.mozilla.org/)
 
 > 说明：uwsgi 部署存在问题，查看服务器响应正常，但插件无法正常使用，且 postman 报错如下，暂无法解决，故删除 uwsgi 部署相关说明。
 ```
