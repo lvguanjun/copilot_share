@@ -8,11 +8,12 @@
 """
 
 from flask import Flask
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from blueprints.enterprise_auth import enterprise_auth_bp
 from blueprints.proxy import proxy_bp
 from config import USE_ENTERPRISE_AUTH
-from werkzeug.middleware.proxy_fix import ProxyFix
+
 
 def create_app():
     app = Flask(__name__)
