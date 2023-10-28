@@ -20,7 +20,7 @@ app = create_app()
 
 
 @app.before_request
-def log_unmatched_routes():
+async def log_unmatched_routes():
     """
     记录未匹配到的路由，并返回 404
     """
