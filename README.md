@@ -136,7 +136,6 @@
             bind = "127.0.0.1:8080"  # 绑定IP和端口号
             workers = 2  # 工作进程数
             threads = 4  # 指定每个进程开启的线程数
-            worker_class = "gevent"  # 指定一个异步处理的库
             env = "prometheus_multiproc_dir=/tmp"  # 指定一个临时目录，用来存放进程的相关信息
             accesslog = "logs/server_access.log"  # 访问日志文件
             errorlog = "logs/server_error.log"  # 错误日志文件
