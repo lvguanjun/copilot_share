@@ -184,12 +184,6 @@
 
         ssl 相关配置参考 [ssl配置生成器](https://ssl-config.mozilla.org/)
 
-> 说明：uwsgi 部署存在问题，查看服务器响应正常，但插件无法正常使用，且 postman 报错如下，暂无法解决，故删除 uwsgi 部署相关说明。
-```
-name: "Error"
-code: "HPE_INVALID_CHUNK_SIZE"
-message: "Parse Error: Invalid character in chunk size"
-```
 
 ### 本地客户端使用说明
 
