@@ -307,9 +307,15 @@ sh scrpits/vscode.sh --chat ghu_ThisIsARealFreeCopilotKeyByCoCopilot https://api
 
 1. 新增 copilot-chat 代理到 chatgpt ，可以使用 chatgpt-4 模型回答问题。
 
-> 说明：当前 copilot-chat 响应为 `application/json` ，而 chatgpt-4 响应为 `text/event-stream; charset=utf-8` ，当前实测两种响应类型在 vscode 均可以正常对话，但不保证后续版本 vscode 仍然可以正常对话。
+    > 说明：当前 copilot-chat 响应为 `application/json` ，而 chatgpt-4 响应为 `text/event-stream; charset=utf-8` ，当前实测两种响应类型在 vscode 均可以正常对话，但不保证后续版本 vscode 仍然可以正常对话。
 
-> 鸣谢 zhile 大佬的 [pandora](https://github.com/zhile-io/pandora)
+    > 鸣谢 zhile 大佬的 [pandora](https://github.com/zhile-io/pandora)
+
+2. copilot chat 调用的 API 本身支持 GPT-4 模型，趁 Github 没改之前先爽着。
+
+    ![gpt4](readme/chat-gpt4.png)
+
+    > **说明：本图能回答该问题是因为改了系统提示用于验证是否 gpt-4 模型，实际仓库为了不影响 chat 对于代码相关的回答准确度而未更改系统提示，仅仅更改了模型**
 
 ## Todo
 
