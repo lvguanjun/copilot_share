@@ -34,11 +34,11 @@ def auth_required(fun):
     return wrapper
 
 
-def conditional_proxy_request(request_url):
+def conditional_proxy_request(request_url, condition=PROXY_COMPLETION_REQUEST):
     def decorator(fun):
         @wraps(fun)
         async def wrapper(*args, **kwargs):
-            if PROXY_COMPLETION_REQUEST:
+            if condition:
                 return await fun(*args, **kwargs)
             return redirect(request_url, code=307)
 

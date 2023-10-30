@@ -82,3 +82,6 @@ CLEAR_HEADERS = [
     "X-Forwarded-For",
     "X-Forwarded-Proto",
 ]
+
+# 是否代理 /v1/chat/completions 接口
+PROXY_GPT_CHAT_COMPLETION: bool = False

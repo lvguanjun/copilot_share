@@ -21,7 +21,7 @@ from config import CLEAR_HEADERS, GET_TOKEN_URL
 from utils.logger import log
 
 
-async def get_copilot_token(github_token, get_token_url: GET_TOKEN_URL):
+async def get_copilot_token(github_token, get_token_url=GET_TOKEN_URL):
     copilot_token = get_token_from_cache(github_token)
     if not copilot_token:
         # 请求 github 接口获取 copilot_token
