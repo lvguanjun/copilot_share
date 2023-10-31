@@ -133,7 +133,7 @@ async def proxy_copilot_chat_completion_v1():
     # 使用 copilot-chat 原始请求体
     json_data = {
         "messages": messages,
-        "model": "gpt-4",
+        "model": model,
         "temperature": 0.1,
         "top_p": 1,
         "n": 1,
