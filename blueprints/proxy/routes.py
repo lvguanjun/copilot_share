@@ -90,9 +90,6 @@ async def proxy_copilot_chat_completion():
         res = await proxy_request(new_request, GPT_CHAT_URL, max_retry=max_retry)
     else:
         headers = dict(request.headers)
-        json_data = request.get_json()
-        json_data["model"] = "gpt-4"
-        new_request = fake_request("POST", json=json_data, headers=headers)
         res = await proxy_request(new_request, CHAT_COMPLETION_URL)
     return res
 
