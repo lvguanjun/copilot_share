@@ -124,8 +124,9 @@ async def proxy_copilot_chat_completion_v1():
         "Accept": "*/*",
     }
     json_data = request.get_json()
-    json_data["stream"] = True
+    is_stream = json_data.get("stream", False)
     new_request = fake_request("POST", json=json_data, headers=headers)
     res = await proxy_request(new_request, CHAT_COMPLETION_URL)
-    res.content_type = "text/event-stream; charset=utf-8"
+    if is_stream:
+        res.content_type = "text/event-stream; charset=utf-8"
     return res
