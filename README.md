@@ -5,13 +5,29 @@
 
 ## 服务介绍
 
-**功能一** `copilot share`: 作为代理服务器，中转 copilot 插件的相关请求，支持多个用户共享同一个 copilot 账号，支持非代理情况下使用 copilot 。适用于拥有 copilot 权限的账号使用者，分享 copilot 权限给小伙伴。[参考](#copilot-代理提示)
+**一、copilot share** 
 
-**功能二** `chatgpt4 to chat`: 支持 `chatgpt4 api` 接入 copilot-chat , 让 copilot-chat 可以使用 chatgpt-4 模型回答问题。[参考](#chat-use-gpt4)
+作为代理服务器，中转 copilot 插件的相关请求，支持多个用户共享同一个 copilot 账号，支持非代理情况下使用 copilot 。适用于拥有 copilot 权限的账号使用者，分享 copilot 权限给小伙伴。
 
-**功能三** `chat use gpt4`: 当前 `copilot-chat` 支持 `gpt-4` 模型，通过[配置](#方案一vscode-插件配置需要服务端开启企业认证支持)设置模型选择，即可使用 `gpt-4` 模型回答问题。[参考](#chat-use-gpt4)
+![copilot](readme/copilot.png)
 
-**功能四** `copilot to chatgpt4`: 通过后端反向代理，可以将 `copilot-chat` 的请求转换为 `chatgpt4 api` 请求，从而实现有 `copilot` 账号即可畅享 `chatgpt-4` 聊天功能。[参考](#copilot-to-chat-示例)
+**二、chatgpt4 to copilot-chat**
+
+支持 `chatgpt4 api` 接入 copilot-chat , 让 copilot-chat 可以使用 chatgpt-4 模型回答问题。
+
+![chat-gpt4](readme/chat-gpt4.png)
+
+**三、copilotchat use gpt4**
+
+当前 `copilot-chat` 支持 `gpt-4` 模型，通过[配置](#方案一vscode-插件配置需要服务端开启企业认证支持)设置模型选择，即可使用 `gpt-4` 模型回答问题。
+
+效果同功能二。
+
+**四、copilot-chat to chatgpt4**
+
+![copilot_to_chat](readme/copilot_to_chatgpt.png)
+
+通过后端反向代理，可以将 `copilot-chat` 的请求转换为 `chatgpt4 api` 请求，从而实现有 `copilot` 账号即可畅享 `chatgpt-4` 聊天功能。
 
 **说明：目前尚不明确功能四是否极易导致 `copilot` 权限禁用，建议慎用此功能**
 
@@ -47,7 +63,7 @@
 
 3. 插件使用代理服务器提供的 copilot token 请求 copilot 服务，获取 copilot 的响应，即 copilot 的提示内容。
 
-    > 1. 使用配置文件同样实现 copilot “提示请求”的代理。详见 [vscode 插件配置](#方案一vscode-插件配置需要服务端开启企业认证支持) 。
+    > 1. 使用配置文件实现 copilot “提示请求”的代理。详见 [vscode 插件配置](#方案一vscode-插件配置需要服务端开启企业认证支持) 。
     >
     > 2. 同样可以通过脚本修改插件，将对 copilot 服务的请求代理到代理服务器，代理服务器使用 copilot token 请求 copilot 服务，提供 copilot 的响应。
 
@@ -292,25 +308,25 @@ sh scrpits/vscode.sh --chat ghu_ThisIsARealFreeCopilotKeyByCoCopilot https://api
 
 ### copilot 代理提示
 
-    ![copilot](readme/copilot.png)
+![copilot](readme/copilot.png)
 
 ### copilot chat 代理提示
 
-    ![copilot-chat](readme/chat.png)
+![copilot-chat](readme/chat.png)
 
 ### server 端展示
 
-    ![server](readme/server.png)
+![server](readme/server.png)
 
-### chat use gpt4
+### copilot-chat use gpt4 示例
 
-    ![chat-gpt4](readme/chat-gpt4.png)
+![chat-gpt4](readme/chat-gpt4.png)
 
-    > **说明：本图能回答该问题是因为改了系统提示用于验证是否 gpt-4 模型，实际仓库为了不影响 chat 对于代码相关的回答准确度而未更改系统提示，仅仅更改了模型**
+> **说明：本图能回答该问题是因为改了系统提示用于验证是否 gpt-4 模型，实际仓库为了不影响 chat 对于代码相关的回答准确度而未更改系统提示，仅仅更改了模型**
 
-### copilot to chat 示例
+### copilot-chat to chatgpt4 示例
 
-    ![copilot_to_chat](readme/copilot_to_chatgpt.png)
+![copilot_to_chat](readme/copilot_to_chatgpt.png)
 
 ## 功能配置说明
 
