@@ -9,27 +9,27 @@
 
 #### 一、copilot share
 
-作为代理服务器，中转 copilot 插件的相关请求，支持多个用户共享同一个 copilot 账号，支持非代理情况下使用 copilot 。适用于拥有 copilot 权限的账号使用者，分享 copilot 权限给小伙伴。
+**作为代理服务器，中转 copilot 插件的相关请求，支持多个用户共享同一个 copilot 账号，支持非代理情况下使用 copilot 。适用于拥有 copilot 权限的账号使用者，分享 copilot 权限给小伙伴。**
 
 ![copilot](readme/copilot.png)
 
 #### 二、chatgpt4 to copilot-chat
 
-支持 `chatgpt4 api` 接入 copilot-chat , 让 copilot-chat 可以使用 chatgpt-4 模型回答问题。
+**支持 `chatgpt4 api` 接入 copilot-chat , 让 copilot-chat 可以使用 chatgpt-4 模型回答问题。**
 
 ![chat-gpt4](readme/chat-gpt4.png)
 
 #### 三、copilotchat use gpt4
 
-当前 `copilot-chat` 支持 `gpt-4` 模型，通过[配置](#方案一vscode-插件配置需要服务端开启企业认证支持)设置模型选择，即可使用 `gpt-4` 模型回答问题。
+**当前 `copilot-chat` 支持 `gpt-4` 模型，通过[配置](#方案一vscode-插件配置需要服务端开启企业认证支持)设置模型选择，即可使用 `gpt-4` 模型回答问题。**
 
 效果同功能二。
 
 #### 四、copilot-chat to chatgpt4
 
-![copilot_to_chat](readme/copilot_to_chatgpt.png)
+**通过后端反向代理，可以将 `copilot-chat` 的请求转换为 `chatgpt4 api` 请求，从而实现有 `copilot` 账号即可畅享 `chatgpt-4` 聊天功能。**
 
-通过后端反向代理，可以将 `copilot-chat` 的请求转换为 `chatgpt4 api` 请求，从而实现有 `copilot` 账号即可畅享 `chatgpt-4` 聊天功能。
+![copilot_to_chat](readme/copilot_to_chatgpt.png)
 
 **说明：目前尚不明确功能四是否极易导致 `copilot` 权限禁用，建议慎用此功能**
 
