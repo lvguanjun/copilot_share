@@ -8,6 +8,7 @@
 """
 
 from flask import Flask
+from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 from blueprints.enterprise_auth import enterprise_auth_bp
@@ -17,6 +18,7 @@ from config import USE_ENTERPRISE_AUTH
 
 def create_app():
     app = Flask(__name__)
+    CORS(app, supports_credentials=True)
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)  # 支持反向代理
     # 加载配置
 

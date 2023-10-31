@@ -1,7 +1,7 @@
 aiohttp==3.8.5
 Flask[async]==2.3.3
+Flask-Cors==4.0.0
 Flask-HTTPAuth==4.8.0
-gevent==23.9.1
 gunicorn==21.2.0
 requests==2.31.0
 tenacity==8.2.3

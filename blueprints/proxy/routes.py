@@ -21,10 +21,12 @@ from config import (
     COMPLETION_ROUTE,
     COMPLETION_URL,
     GET_TOKEN_ROUTE,
+    GITHUB_GET_TOKEN_URL,
     GITHUB_TOKEN,
     GPT_CHAT_URL,
     GPT_KEY,
     GPT_MODEL,
+    PROXY_GPT_CHAT_COMPLETION,
     TOKEN_MAX_ERR_COUNT,
     USE_GPT_PROXY,
 )
@@ -88,8 +90,40 @@ async def proxy_copilot_chat_completion():
         res = await proxy_request(new_request, GPT_CHAT_URL, max_retry=max_retry)
     else:
         headers = dict(request.headers)
-        json_data = request.get_json()
-        json_data["model"] = "gpt-4"
-        new_request = fake_request("POST", json=json_data, headers=headers)
         res = await proxy_request(new_request, CHAT_COMPLETION_URL)
+    return res
+
+
+@proxy_bp.route(f"/v1/{CHAT_COMPLETION_ROUTE}", methods=["POST"])
+@conditional_proxy_request(CHAT_COMPLETION_URL, PROXY_GPT_CHAT_COMPLETION)
+async def proxy_copilot_chat_completion_v1():
+    """
+    使用 github token 获取 copilot-chat 的提示接口
+    """
+
+    github_token = request.headers.get("Authorization", "")
+    github_token = github_token.strip("Bearer ")
+    status_code, copilot_token = await get_copilot_token(
+        github_token, GITHUB_GET_TOKEN_URL
+    )
+    if status_code != 200:
+        return jsonify(copilot_token), status_code
+    copilot_token = copilot_token.get("token")
+
+    headers = {
+        "Authorization": f"Bearer {copilot_token}",
+        "Editor-Version": "vscode/1.82.2",
+        "Editor-Plugin-Version": "copilot-chat/0.7.1",
+        "Openai-Organization": "github-copilot",
+        "Openai-Intent": "conversation-panel",
+        "Content-Type": "application/json",
+        "User-Agent": "GitHubCopilotChat/0.7.1",
+        "Accept": "*/*",
+    }
+    json_data = request.get_json()
+    is_stream = json_data.get("stream", False)
+    new_request = fake_request("POST", json=json_data, headers=headers)
+    res = await proxy_request(new_request, CHAT_COMPLETION_URL)
+    if is_stream:
+        res.content_type = "text/event-stream; charset=utf-8"
     return res

@@ -21,7 +21,7 @@ from config import CLEAR_HEADERS, GET_TOKEN_URL
 from utils.logger import log
 
 
-async def get_copilot_token(github_token):
+async def get_copilot_token(github_token, get_token_url=GET_TOKEN_URL):
     copilot_token = get_token_from_cache(github_token)
     if not copilot_token:
         # 请求 github 接口获取 copilot_token
@@ -29,7 +29,7 @@ async def get_copilot_token(github_token):
             "Authorization": f"token {github_token}",
         }
         async with aiohttp.ClientSession() as session:
-            async with session.get(GET_TOKEN_URL, headers=headers) as res:
+            async with session.get(get_token_url, headers=headers) as res:
                 if res.status != 200:
                     return res.status, await res.text()
                 copilot_token = await res.json()

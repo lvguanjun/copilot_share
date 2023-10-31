@@ -39,6 +39,8 @@ COMPLETION_ROUTE = "/v1/engines/copilot-codex/completions"
 CHAT_COMPLETION_URL = "https://api.githubcopilot.com/chat/completions"
 CHAT_COMPLETION_ROUTE = "/chat/completions"
 
+# github获取token的接口，无需更改
+GITHUB_GET_TOKEN_URL = "https://api.github.com/copilot_internal/v2/token"
 
 # 企业认证相关
 
@@ -80,3 +82,6 @@ CLEAR_HEADERS = [
     "X-Forwarded-For",
     "X-Forwarded-Proto",
 ]
+
+# 是否代理 /v1/chat/completions 接口
+PROXY_GPT_CHAT_COMPLETION: bool = False

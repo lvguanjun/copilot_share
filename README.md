@@ -5,20 +5,23 @@
 
 ## 服务介绍
 
-该服务作为代理服务器，中转 copilot 插件的相关请求，支持多个用户共享同一个 copilot 账号，支持非代理情况下使用 copilot 。适用于拥有 copilot 权限的账号使用者，分享 copilot 权限给小伙伴。
+**功能一** `copilot share`: 作为代理服务器，中转 copilot 插件的相关请求，支持多个用户共享同一个 copilot 账号，支持非代理情况下使用 copilot 。适用于拥有 copilot 权限的账号使用者，分享 copilot 权限给小伙伴。[参考](#copilot-代理提示)
+
+**功能二** `chatgpt4 to chat`: 支持 `chatgpt4 api` 接入 copilot-chat , 让 copilot-chat 可以使用 chatgpt-4 模型回答问题。[参考](#chat-use-gpt4)
+
+**功能三** `chat use gpt4`: 当前 `copilot-chat` 支持 `gpt-4` 模型，通过[配置](#方案一vscode-插件配置需要服务端开启企业认证支持)设置模型选择，即可使用 `gpt-4` 模型回答问题。[参考](#chat-use-gpt4)
+
+**功能四** `copilot to chatgpt4`: 通过后端反向代理，可以将 `copilot-chat` 的请求转换为 `chatgpt4 api` 请求，从而实现有 `copilot` 账号即可畅享 `chatgpt-4` 聊天功能。[参考](#copilot-to-chat-示例)
+
+**说明：目前尚不明确功能四是否极易导致 `copilot` 权限禁用，建议慎用此功能**
+
+> 部分功能需要开启配置才能启用，当前默认配置文件仅开启了 `copilot share` 功能，其他功能需要手动开启。详见[功能配置说明](#功能配置说明)
 
 > **如果只是想使用 copilot ，可直接使用 zhile 大佬的 [CoCopilot插件](https://zhile.io/2023/09/09/github-got-banned.html#more-468)，也可以 vscode 插件商店搜索 `CoCopilot` 安装。感恩大佬，给大佬插件五星好评呀:star::star::star::star::star: 。**
 
-~~> **貌似新版插件先校验登录状态后获取 copilot token ，若提示 "Sign in to use GitHub Copilot." 建议登录账号尝试（登录账号无需 copilot 权限）**~~
-
-> ~~当前脚本已注入账号信息，当 copilot 插件提示登录时，主动点×关闭后 retry 即可。~~
->
-> ~~当前注入信息为: `{"id":"1","account":{"label":"Copilot","id":"1"},"scopes":["user:email"],"accessToken":"accessToken"}`~~
-
-> 貌似 `v1.129.0` 版本插件注入账号信息方式优先级不够高，仍然提示登录，建议直接登录账号（无需 copilot 权限），且不再维护脚本方式无需登录需求。如果实在是希望通过脚本实现无需登录，可以参考 [issues 3](https://github.com/lvguanjun/copilot_share/issues/3#issuecomment-1773886757) 小伙伴提出的方案
+> 貌似 `v1.129.0` 版本插件注入账号信息方式优先级不够高，将提示登录，建议直接登录账号（无需 copilot 权限），且不再维护脚本方式无需登录需求。如果实在是希望通过脚本实现无需登录，可以参考 [issues 3](https://github.com/lvguanjun/copilot_share/issues/3#issuecomment-1773886757) 小伙伴提出的方案
 >
 > **不过好消息是，参考 zhile 大佬的 [CoCopilot插件](https://zhile.io/2023/09/09/github-got-banned.html#more-468)，也实现了一个简单的基于 BasicAuth 的企业认证方案，可以通过自定义 [OAuth 2.0认证授权](https://www.ruanyifeng.com/blog/2019/04/oauth_design.html) 实现非登录使用 copilot 需求**
-
 
 > 代理服务器需要能够访问 github.com 。
 
@@ -37,14 +40,16 @@
 
 1. 代理服务器配置具有权限的 github token ，使用该 token 请求 copilot token 。
 2. vscode 插件配置代理服务器地址，从代理服务器获取 copilot token 。
-    1. 脚本方案：使用脚本修改插件，将对 `api.github.com` 获取 copilot 的请求覆盖指向为代理服务器，代理服务器使用 github token 请求 `api.github.com` ，提供 copilot token 。
-    2. 企业认证方案：通过配置文件配置使用企业认证，将整个 token 获取的请求流程代理到代理服务器。
+    1. 企业认证方案：通过配置文件配置使用企业认证，将整个 token 获取的认证流程代理到代理服务器。
+    2. 脚本方案：使用脚本修改插件，将对 `api.github.com` 获取 copilot 的请求覆盖指向为代理服务器，代理服务器使用 github token 请求 `api.github.com` ，提供 copilot token 。
+
+    **个人建议使用企业认证方案**
+
 3. 插件使用代理服务器提供的 copilot token 请求 copilot 服务，获取 copilot 的响应，即 copilot 的提示内容。
 
-    > 1. 同样可以通过脚本修改插件，将对 copilot 服务的请求代理到代理服务器，代理服务器使用 copilot token 请求 copilot 服务，提供 copilot 的响应。
+    > 1. 使用配置文件同样实现 copilot “提示请求”的代理。详见 [vscode 插件配置](#方案一vscode-插件配置需要服务端开启企业认证支持) 。
     >
-    > 2. 使用配置文件同样可以实现 copilot “提示请求”的代理。详见 [vscode 插件配置](#方案一vscode-插件配置需要服务端开启企业认证支持) 。
-
+    > 2. 同样可以通过脚本修改插件，将对 copilot 服务的请求代理到代理服务器，代理服务器使用 copilot token 请求 copilot 服务，提供 copilot 的响应。
 
 因此实现了一个 github token 可以被多个用户共享，且不需要代理即可使用 copilot 。
 
@@ -57,7 +62,7 @@
 
 通过对 `github.copilot.advanced.authProvider` 的配置，将原来的 github.com 认证流程替换为自定义的 enterprise 认证流程，从而实现非登录使用 copilot 的需求。
 
-如果代理服务器配置 `USE_ENTERPRISE_AUTH` 为 True ，则代理服务器会注册一个 enterprise_auth 蓝图，用于处理认证流程。否则不会注册该蓝图，此时代理服务器仅仅代理 copilot 相关的请求。
+需要代理服务器配置 `USE_ENTERPRISE_AUTH` 为 True ，代理服务器会注册一个 enterprise_auth 蓝图，用于处理认证流程。否则不会注册该蓝图，此时代理服务器仅仅代理 copilot 相关的请求。
 
 ## 使用说明
 
@@ -70,8 +75,12 @@
     1. `server_config["token"]` ：自定义鉴权，用于拦截非鉴权请求，若无需要可设置为 None 。
     2. `GITHUB_TOKEN` ：即具备 copilot 权限账号的 token ，获取方式详见 [GITHUB TOKEN 获取](#github-token-获取)
     3. `PROXY_COMPLETION_REQUEST`：是否允许代理 copilot prompt 的请求，默认为 False ，减轻代理服务器压力。
-    4. `USE_ENTERPRISE_AUTH`：是否使用企业认证，若否，则不会注册企业认证的蓝图，详见 [企业认证方案](#企业认证方案)。
-    5. `LOG_DEBUG` ：是否以 debug 模式记录日志。
+    4. `USE_ENTERPRISE_AUTH`：是否使用企业认证，若否，则不会注册企业认证的蓝图，客户端只能使用脚本方案共享 copilot , 详见 [企业认证方案](#企业认证方案)。
+    5. `PROXY_GPT_CHAT_COMPLETION`：是否启用 `copilot-to-chat` 的功能，默认不启用，启用后将生成 chatgpt 的对话接口 `/v1/chat/completions`，用于作为代理 `chatgpt` 的接口。
+
+        **N次提醒慎用，copilot权限禁用来的很快**
+
+    6. `LOG_DEBUG` ：是否以 debug 模式记录日志。
 
 2. 配置虚拟环境
 
@@ -136,7 +145,6 @@
             bind = "127.0.0.1:8080"  # 绑定IP和端口号
             workers = 2  # 工作进程数
             threads = 4  # 指定每个进程开启的线程数
-            worker_class = "gevent"  # 指定一个异步处理的库
             env = "prometheus_multiproc_dir=/tmp"  # 指定一个临时目录，用来存放进程的相关信息
             accesslog = "logs/server_access.log"  # 访问日志文件
             errorlog = "logs/server_error.log"  # 错误日志文件
@@ -202,6 +210,9 @@
         "debug.overrideProxyUrl": "http://127.0.0.1:8080",
         # 需要代理 copilot chat prompt 的请求时设置
         "debug.chatOverrideProxyUrl": "http://127.0.0.1:8080/chat",
+        # copilot-chat 使用 gpt-4 模型回答问题，官方配置
+        # 即使未使用代理服务器，此配置也可以使用 gpt-4 模型回答问题
+        "debug.overrideChatEngine": "gpt-4",
     },
     "github-enterprise.uri": "http://user:password@127.0.0.1:8080",
     ```
@@ -209,29 +220,13 @@
     1. `debug.overrideProxyUrl` ：代理服务器地址，仅代理“提示请求”时添加。
     2. `debug.chatOverrideProxyUrl` ：代理服务器地址，仅代理 chat “请求”时添加。
     3. `github-enterprise.uri` ：代理服务器地址，其中 `user:password` 为代理服务器的 BasicAuth 鉴权，代理服务器配置了鉴权时添加正确账密，未配置鉴权则需填任意字符串**占位**，例如 `user:password` 。具体原因详见[子域名规避说明](#其他说明)
+    4. `debug.overrideChatEngine` ：使用 gpt-4 模型回答问题，官方配置，即使未使用任何代理服务（包括授权认证），此配置也可以使用 gpt-4 模型回答问题。
 
 3. 重载 vscode 窗口
 4. 当 copilot 插件提示登录时，点击登录走正常登录流程即可
 
     当前登录仅仅走了流程，确保插件js正常加载，不会真正登录，因此不需要担心账号泄露。
 
-> ~~说明：该方式配置刚需域名，如果没有域名，可以通过更改本地hosts文件实现。需要同时添加 `example.com` 和 `api.example.com` 的映射。~~
-
-
-> 重要：**~~如果使用 nginx 反向代理，需要同时配置 `example.com` 和 `api.example.com` 的映射。插件内部会向 `github-enterprise.uri` 的子域名 `api.example.com` 发送请求，如果没有配置 `api.example.com` 的映射，会导致请求失败。~~**
-
-~~nginx配置示例：~~
-
-```
-server {
-    listen 80;
-    server_name example.com api.example.com;
-
-    location / {
-        proxy_pass http://127.0.0.1:8080;
-    }
-}
-```
 
 ##### 其他说明
 
@@ -287,35 +282,76 @@ sh scrpits/vscode.sh --chat ghu_ThisIsARealFreeCopilotKeyByCoCopilot https://api
 
 2. vscode 可以登录插件后**抓包获取 token** ，以 gho_ 开头的字符串。
 
-> vscode 玩家如果觉得抓包挺麻烦，可以下载 JetBrains 系列 IDE ，在 JetBrains 系列 IDE 中登录插件后，获取到 token 也可以直接在 vscode 中使用。
+    > vscode 玩家如果觉得抓包挺麻烦，可以下载 JetBrains 系列 IDE ，在 JetBrains 系列 IDE 中登录插件后，获取到 token 也可以直接在 vscode 中使用。
+
+3. 使用 zhile 大佬提供的接口，建议无脑选3，感谢大佬。
+
+    https://cocopilot.org/copilot/token
 
 ## 成功示例
 
-- copilot 代理提示
+### copilot 代理提示
 
     ![copilot](readme/copilot.png)
 
-- copilot chat 代理提示
+### copilot chat 代理提示
 
     ![copilot-chat](readme/chat.png)
 
-- server 端展示
+### server 端展示
 
     ![server](readme/server.png)
 
-## 功能增强
+### chat use gpt4
 
-1. 新增 copilot-chat 代理到 chatgpt ，可以使用 chatgpt-4 模型回答问题。
-
-    > 说明：当前 copilot-chat 响应为 `application/json` ，而 chatgpt-4 响应为 `text/event-stream; charset=utf-8` ，当前实测两种响应类型在 vscode 均可以正常对话，但不保证后续版本 vscode 仍然可以正常对话。
-
-    > 鸣谢 zhile 大佬的 [pandora](https://github.com/zhile-io/pandora)
-
-2. copilot chat 调用的 API 本身支持 GPT-4 模型，趁 Github 没改之前先爽着。
-
-    ![gpt4](readme/chat-gpt4.png)
+    ![chat-gpt4](readme/chat-gpt4.png)
 
     > **说明：本图能回答该问题是因为改了系统提示用于验证是否 gpt-4 模型，实际仓库为了不影响 chat 对于代码相关的回答准确度而未更改系统提示，仅仅更改了模型**
+
+### copilot to chat 示例
+
+    ![copilot_to_chat](readme/copilot_to_chatgpt.png)
+
+## 功能配置说明
+
+### 1. 使用企业认证方式
+
+1. 服务端配置 `USE_ENTERPRISE_AUTH = True` 。
+3. 服务端按需配置账密，用于 BasicAuth 鉴权，防止接口被滥用。
+
+    ```python
+    # 企业认证账密，为空字典则无需验证
+    ENTERPRISE_AUTH_USERS = {
+        "user1": "password1",
+        "user2": "password2",
+    }
+    ```
+
+2. 客户端插件正确配置 `github-enterprise.uri` 。
+
+### 2. 代理服务器代理所有的提示请求
+
+1. 服务端配置 `PROXY_COMPLETION_REQUEST = True` 。
+2. 客户端插件配置 `debug.overrideProxyUrl`, `debug.chatOverrideProxyUrl` 为代理服务器地址。
+
+### 3. chat use gpt4
+
+copilot-chat 使用 gpt-4 模型回答问题。
+
+1. 客户端插件配置 `debug.overrideChatEngine` 为 `gpt-4` 。
+
+### 4. chatgpt4 to chat
+
+copilot-chat 使用 chatgpt 接口代理回答问题
+
+1. 服务端配置 `USE_GPT_PROXY = True` 且 `PROXY_COMPLETION_REQUEST = True` 。
+2. 客户端插件配置 `debug.chatOverrideProxyUrl` 为代理服务器地址。
+
+### 5. copilot to chatgpt4
+
+1. 服务端配置 `PROXY_GPT_CHAT_COMPLETION = True` 。
+
+> **说明：目前尚不明确此功能是否极易导致 `copilot` 权限禁用，建议慎用此功能**
 
 ## Todo
 
