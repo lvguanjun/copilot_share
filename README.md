@@ -11,7 +11,7 @@
 
 作为代理服务器，中转 copilot 插件的相关请求，支持多个用户共享同一个 copilot 账号，支持非代理情况下使用 copilot 。适用于拥有 copilot 权限的账号使用者，分享 copilot 权限给小伙伴。
 
-![copilot](readme/copilot.png)
+<img src="readme/copilot.png" width="400" height="400" alt="chat-gpt4" align=center />
 
 #### 二、chatgpt4 to copilot-chat
 
