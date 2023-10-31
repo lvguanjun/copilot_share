@@ -5,31 +5,34 @@
 
 ## 服务介绍
 
-**一、copilot share** 
+### 功能说明
+
+#### 一、copilot share
 
 作为代理服务器，中转 copilot 插件的相关请求，支持多个用户共享同一个 copilot 账号，支持非代理情况下使用 copilot 。适用于拥有 copilot 权限的账号使用者，分享 copilot 权限给小伙伴。
 
 ![copilot](readme/copilot.png)
 
-**二、chatgpt4 to copilot-chat**
+#### 二、chatgpt4 to copilot-chat
 
 支持 `chatgpt4 api` 接入 copilot-chat , 让 copilot-chat 可以使用 chatgpt-4 模型回答问题。
 
 ![chat-gpt4](readme/chat-gpt4.png)
 
-**三、copilotchat use gpt4**
+#### 三、copilotchat use gpt4
 
 当前 `copilot-chat` 支持 `gpt-4` 模型，通过[配置](#方案一vscode-插件配置需要服务端开启企业认证支持)设置模型选择，即可使用 `gpt-4` 模型回答问题。
 
 效果同功能二。
 
-**四、copilot-chat to chatgpt4**
+#### 四、copilot-chat to chatgpt4
 
 ![copilot_to_chat](readme/copilot_to_chatgpt.png)
 
 通过后端反向代理，可以将 `copilot-chat` 的请求转换为 `chatgpt4 api` 请求，从而实现有 `copilot` 账号即可畅享 `chatgpt-4` 聊天功能。
 
 **说明：目前尚不明确功能四是否极易导致 `copilot` 权限禁用，建议慎用此功能**
+
 
 > 部分功能需要开启配置才能启用，当前默认配置文件仅开启了 `copilot share` 功能，其他功能需要手动开启。详见[功能配置说明](#功能配置说明)
 
@@ -74,15 +77,9 @@
 1. 代理服务器可以使用多个 github token ，组成 token 池，减轻单个 token 的压力。
 2. 代理服务器可以将已获取的 copilot token 缓存，减少重复获取 copilot token 的请求。
 
-## 企业认证方案
-
-通过对 `github.copilot.advanced.authProvider` 的配置，将原来的 github.com 认证流程替换为自定义的 enterprise 认证流程，从而实现非登录使用 copilot 的需求。
-
-需要代理服务器配置 `USE_ENTERPRISE_AUTH` 为 True ，代理服务器会注册一个 enterprise_auth 蓝图，用于处理认证流程。否则不会注册该蓝图，此时代理服务器仅仅代理 copilot 相关的请求。
-
 ## 使用说明
 
-### 代理服务器
+### 代理服务端
 
 1. 复制 config.py.sample 为 config.py ，并根据实际情况修改其中的配置
 
@@ -368,6 +365,13 @@ copilot-chat 使用 chatgpt 接口代理回答问题
 1. 服务端配置 `PROXY_GPT_CHAT_COMPLETION = True` 。
 
 > **说明：目前尚不明确此功能是否极易导致 `copilot` 权限禁用，建议慎用此功能**
+
+
+## 企业认证方案
+
+通过对 `github.copilot.advanced.authProvider` 的配置，将原来的 github.com 认证流程替换为自定义的 enterprise 认证流程，从而实现非登录使用 copilot 的需求。
+
+需要代理服务器配置 `USE_ENTERPRISE_AUTH` 为 True ，代理服务器会注册一个 enterprise_auth 蓝图，用于处理认证流程。否则不会注册该蓝图，此时代理服务器仅仅代理 copilot 相关的请求。
 
 ## Todo
 
