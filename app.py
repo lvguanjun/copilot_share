@@ -8,12 +8,14 @@
 """
 
 
+import asyncio
 import logging
 
 from flask import jsonify, request
 
 from config import server_config
 from factory import create_app
+from utils.client_manger import client_manager
 from utils.logger import log
 
 app = create_app()
@@ -36,8 +38,11 @@ async def log_unmatched_routes():
 
 
 if __name__ == "__main__":
-    app.run(
-        host=server_config["host"],
-        port=server_config["port"],
-        debug=False,
-    )
+    try:
+        app.run(
+            host=server_config["host"],
+            port=server_config["port"],
+            debug=False,
+        )
+    finally:
+        asyncio.run(client_manager.close())

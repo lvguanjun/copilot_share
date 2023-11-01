@@ -8,16 +8,20 @@
 """
 
 
+import asyncio
 import logging
+import queue
+import threading
+from typing import Optional
 
-import aiohttp
-import requests
+import httpx
 from flask import Request, Response
 from tenacity import retry, retry_if_result, stop_after_attempt, wait_fixed
 from werkzeug.datastructures import Headers
 
 from cache.cache_token import get_token_from_cache, set_token_to_cache
 from config import CLEAR_HEADERS, GET_TOKEN_URL
+from utils.client_manger import client_manager
 from utils.logger import log
 
 
@@ -28,69 +32,95 @@ async def get_copilot_token(github_token, get_token_url=GET_TOKEN_URL):
         headers = {
             "Authorization": f"token {github_token}",
         }
-        async with aiohttp.ClientSession() as session:
-            async with session.get(get_token_url, headers=headers) as res:
-                if res.status != 200:
-                    return res.status, await res.text()
-                copilot_token = await res.json()
-                # 保存到 cache
-                set_token_to_cache(github_token, copilot_token)
+        res = await client_manager.client.get(get_token_url, headers=headers)
+        if res.status_code != 200:
+            return res.status_code, res.text()
+        copilot_token = res.json()
+        # 保存到 cache
+        set_token_to_cache(github_token, copilot_token)
     return 200, copilot_token
 
 
-async def proxy_request(
-    request: Request, target_url: str, max_retry: int = 1
-) -> Response:
-    """
-    Send a proxy request to the target URL.
+async def send_request(method: str, url: str, headers: dict, data: bytes):
+    try:
+        req = client_manager.client.build_request(
+            method, url, headers=headers, data=data
+        )
+        return await client_manager.client.send(req, stream=True)
+    except Exception as e:
+        log(f"ERROR: {e}", logging.ERROR)
+        return None
 
-    :param request: The request object to proxy.
-    :param target_url: The target URL to proxy the request to.
-    :param max_retry: The maximum number of retries to make.
-    :return: status_code, response from the target server.
-    """
 
-    # 重试等待时间
-    retry_wait = 0.5
+def stream_response(response: httpx.Response):
+    q = queue.Queue()
 
-    # 定义重试条件：仅当状态码200时不重试
-    def retry_if_not_200(response):
-        # 如果response为None（表示请求过程中出现异常），或者状态码不是200，那么触发重试
-        return response is None or response.status_code != 200
+    async def fetch_chunks():
+        try:
+            async for chunk in response.aiter_bytes():
+                q.put(chunk)
+        finally:
+            await response.aclose()
+            q.put(None)  # Signal the end of the stream
 
-    def retry_callback(retry_state):
-        last_response = retry_state.outcome.result()
-        return last_response
+    def run_fetch_chunks():
+        asyncio.run(fetch_chunks())
+
+    threading.Thread(target=run_fetch_chunks).start()
+
+    def generator():
+        while True:
+            chunk = q.get()
+            if chunk is None:
+                break
+            yield chunk
+
+    return Response(
+        response=generator(),
+        status=response.status_code,
+        headers=dict(response.headers),
+    )
+
+
+def should_retry(response: Optional[httpx.Response]) -> bool:
+    return response is None
+
+
+async def proxy_request(request: Request, target_url: str, max_retry: int = 3):
+    wait_time = 0.5
+    retry_time = 1
+
+    def capture_retry_time(retry_state):
+        nonlocal retry_time
+        retry_time = retry_state.attempt_number
 
     @retry(
-        retry=retry_if_result(retry_if_not_200),
+        retry=retry_if_result(should_retry),
         stop=stop_after_attempt(max_retry),
-        wait=wait_fixed(retry_wait),
-        retry_error_callback=retry_callback,
+        wait=wait_fixed(wait_time),
+        before=capture_retry_time,
     )
-    def _proxy_request(method, url, headers, data):
-        try:
-            resp = requests.request(
-                method, url, headers=headers, data=data, stream=True
-            )
-            if resp.status_code != 200:
-                log(f"{resp.status_code} - {resp.text}", logging.WARNING)
-            return resp
-        except Exception as e:
-            log(f"ERROR: {e}", logging.ERROR)
-            return None
+    async def _proxy_request(request: Request, target_url: str):
+        request_headers = Headers(request.headers)
+        for header in CLEAR_HEADERS:
+            request_headers.pop(header, None)
+        request_headers = dict(request_headers)
+        request_body = request.data
+        request_method = request.method
 
-    request_headers = Headers(request.headers)
-    for header in CLEAR_HEADERS:
-        request_headers.pop(header, None)
-    request_headers = dict(request_headers)
-    request_body = request.data
-    request_method = request.method
-    resp = _proxy_request(request_method, target_url, request_headers, request_body)
-    if resp is not None:
-        return Response(
-            resp.iter_content(1024),
-            content_type=resp.headers.get("content-type"),
-            status=resp.status_code,
+        response = await send_request(
+            request_method, target_url, request_headers, request_body
         )
-    return Response("Failed to get response", status=500)
+        if response is None:
+            if retry_time == max_retry:
+                return Response("Failed to get response", status=500)
+            return None
+        if response.status_code != 200 and retry_time < max_retry:
+            log(f"{response.status_code=}, {retry_time} retrying...", logging.WARNING)
+            await response.aclose()
+            return None
+        return stream_response(response)
+
+    response = await _proxy_request(request, target_url)
+
+    return response

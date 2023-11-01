@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+@File    :   gunicorn_config.py
+@Time    :   2023/10/30 11:30:31
+@Author  :   lvguanjun
+@Desc    :   gunicorn_config.py
+"""
+
+import asyncio
+
+from utils.client_manger import client_manager
+
+
+def post_fork(server, worker):
+    """
+    Function executed after a worker has been forked.
+    """
+    # This ensures each worker gets its own client instance.
+    print("hei hello")
+    client_manager.client
+
+
+def worker_exit(server, worker):
+    """
+    Function executed after a worker exits.
+    """
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        loop.run_until_complete(client_manager.close())
+    finally:
+        loop.close()
+
+
+bind = "127.0.0.1:8080"  # 绑定IP和端口号
+workers = 2  # 工作进程数
+timeout = 15
+worker_class = "gthread"
+accesslog = "logs/server_access.log"  # 访问日志文件
+errorlog = "logs/server_error.log"  # 错误日志文件
