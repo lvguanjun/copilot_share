@@ -136,6 +136,7 @@ async def proxy_copilot_chat_completion_v1():
         "temperature": 0.1,
         "top_p": 1,
         "n": 1,
+        "stream": is_stream,
         "intent": True,
     }
     new_request = fake_request("POST", json=json_data, headers=headers)
