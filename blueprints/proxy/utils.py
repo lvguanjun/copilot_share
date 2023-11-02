@@ -17,7 +17,7 @@ from tenacity import retry, retry_if_result, stop_after_attempt, wait_fixed
 from werkzeug.datastructures import Headers
 
 from cache.cache_token import get_token_from_cache, set_token_to_cache
-from config import CLEAR_HEADERS, GET_TOKEN_URL
+from config import CLEAR_HEADERS, GET_TOKEN_URL, PUBLIC_SUGGESTIONS
 from utils.logger import log
 
 
@@ -33,6 +33,8 @@ async def get_copilot_token(github_token, get_token_url=GET_TOKEN_URL):
                 if res.status != 200:
                     return res.status, await res.text()
                 copilot_token = await res.json()
+                copilot_token["telemetry"] = "disabled"
+                copilot_token["public_suggestions"] = PUBLIC_SUGGESTIONS
                 # 保存到 cache
                 set_token_to_cache(github_token, copilot_token)
     return 200, copilot_token
