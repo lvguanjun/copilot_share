@@ -87,4 +87,4 @@ CLEAR_HEADERS = [
 PROXY_GPT_CHAT_COMPLETION: bool = False
 
 # 是否匹配公共建议，理论上该设置不会生效，不过保留试试
-PUBLIC_SUGGESTIONS = "enabled" # enabled, disabled
+PUBLIC_SUGGESTIONS = "enabled"  # enabled, disabled
