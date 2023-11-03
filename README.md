@@ -31,8 +31,13 @@
 
 ![copilot_to_chat](readme/copilot_to_chatgpt.png)
 
-**说明：目前尚不明确功能四是否极易导致 `copilot` 权限禁用，建议慎用此功能**
+单独使用此功能见 [**演示demo**](https://github.com/lvguanjun/copilot_to_chatgpt4)
 
+**重要：此操作目前观测极易被禁用 `copilot` 权限，除非你的 `github token` 非常多，否则慎重使用!**
+
+**重要：此操作目前观测极易被禁用 `copilot` 权限，除非你的 `github token` 非常多，否则慎重使用!**
+
+**重要：此操作目前观测极易被禁用 `copilot` 权限，除非你的 `github token` 非常多，否则慎重使用!**
 
 > 部分功能需要开启配置才能启用，当前默认配置文件仅开启了 `copilot share` 功能，其他功能需要手动开启。详见[功能配置说明](#功能配置说明)
 
@@ -364,7 +369,6 @@ copilot-chat 使用 chatgpt 接口代理回答问题
 
 1. 服务端配置 `PROXY_GPT_CHAT_COMPLETION = True` 。
 
-> **说明：目前尚不明确此功能是否极易导致 `copilot` 权限禁用，建议慎用此功能**
 
 
 ## 企业认证方案
