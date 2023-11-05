@@ -9,6 +9,9 @@
 
 
 import logging
+import random
+import string
+from typing import Tuple
 
 import aiohttp
 import requests
@@ -96,3 +99,39 @@ async def proxy_request(
             status=resp.status_code,
         )
     return Response("Failed to get response", status=500)
+
+
+def gen_hex_str(length: int) -> str:
+    return "".join(random.choice(string.hexdigits.lower()) for _ in range(length))
+
+
+def create_headers(copilot_token: str) -> dict:
+    return {
+        "Authorization": f"Bearer {copilot_token}",
+        "X-Request-Id": f"{gen_hex_str(8)}-{gen_hex_str(4)}-{gen_hex_str(4)}-{gen_hex_str(4)}-{gen_hex_str(12)}",
+        "Vscode-Sessionid": f"{gen_hex_str(8)}-{gen_hex_str(4)}-{gen_hex_str(4)}-{gen_hex_str(4)}-{gen_hex_str(25)}",
+        "Vscode-Machineid": f"{gen_hex_str(64)}",
+        "Editor-Version": "vscode/1.83.1",
+        "Editor-Plugin-Version": "copilot-chat/0.8.0",
+        "Openai-Organization": "github-copilot",
+        "Openai-Intent": "conversation-panel",
+        "Content-Type": "application/json",
+        "User-Agent": "GitHubCopilotChat/0.8.0",
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip,deflate,br",
+        "connection": "close",
+    }
+
+
+def create_json_data(request: Request) -> Tuple[dict, bool]:
+    json_data = request.json
+    is_stream = json_data.get("stream", False)
+    return {
+        "messages": json_data.get("messages", []),
+        "model": json_data.get("model", "copilot-chat"),
+        "temperature": json_data.get("temperature", 0.1),
+        "top_p": json_data.get("top_p", 1),
+        "n": json_data.get("n", 1),
+        "stream": is_stream,
+        "intent": True,
+    }, is_stream
