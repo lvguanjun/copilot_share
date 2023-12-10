@@ -38,6 +38,7 @@ async def get_copilot_token(github_token, get_token_url=GET_TOKEN_URL):
                 copilot_token = await res.json()
                 copilot_token["telemetry"] = "disabled"
                 copilot_token["public_suggestions"] = PUBLIC_SUGGESTIONS
+                copilot_token["chat_jetbrains_enabled"] = True
                 # 保存到 cache
                 set_token_to_cache(github_token, copilot_token)
     return 200, copilot_token

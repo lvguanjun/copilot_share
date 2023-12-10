@@ -8,8 +8,8 @@
 """
 
 
-import time
 import random
+import time
 
 tokens = {}
 err_tokens = {}

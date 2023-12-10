@@ -13,7 +13,12 @@ import random
 from flask import jsonify, request
 
 from blueprints.proxy import proxy_bp
-from blueprints.proxy.utils import get_copilot_token, proxy_request, create_headers, create_json_data
+from blueprints.proxy.utils import (
+    create_headers,
+    create_json_data,
+    get_copilot_token,
+    proxy_request,
+)
 from cache.cache_token import err_tokens
 from config import (
     CHAT_COMPLETION_ROUTE,
@@ -58,7 +63,16 @@ async def get_token():
             )
             continue
         return jsonify(copilot_token)
-    return jsonify({"msg": "Failed to get copilot token from all github token"}), 500
+    err_msg = {
+        "error_details": {
+            "url": "https://github.com/github-copilot/signup?editor={EDITOR}",
+            "message": "Failed to get copilot token from all github token",
+            "title": "Signup for GitHub Copilot",
+            "notification_id": "revoked_coupon",
+        },
+        "message": "Resource not accessible by integration",
+    }
+    return jsonify(err_msg), 403
 
 
 @proxy_bp.route(COMPLETION_ROUTE, methods=["POST"])
