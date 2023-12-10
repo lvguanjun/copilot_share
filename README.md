@@ -41,7 +41,7 @@
 
 > 部分功能需要开启配置才能启用，当前默认配置文件仅开启了 `copilot share` 功能，其他功能需要手动开启。详见[功能配置说明](#功能配置说明)
 
-> **如果只是想使用 copilot ，可直接使用 zhile 大佬的 [CoCopilot插件](https://zhile.io/2023/09/09/github-got-banned.html#more-468)，也可以 vscode 插件商店搜索 `CoCopilot` 安装。感恩大佬，给大佬插件五星好评呀:star::star::star::star::star: 。**
+> **如果只是想使用 copilot ，可直接使用 zhile 大佬的 [CoCopilot插件](https://zhile.io/2023/09/09/github-got-banned.html#more-468)，也可以 vscode 插件商店搜索 `CoCopilot` 安装。感恩大佬，给大佬插件五星好评呀。** :star::star::star::star::star:
 
 > 貌似 `v1.129.0` 版本插件注入账号信息方式优先级不够高，将提示登录，建议直接登录账号（无需 copilot 权限），且不再维护脚本方式无需登录需求。如果实在是希望通过脚本实现无需登录，可以参考 [issues 3](https://github.com/lvguanjun/copilot_share/issues/3#issuecomment-1773886757) 小伙伴提出的方案
 >
