@@ -25,7 +25,7 @@
 
 效果同功能二。
 
-#### 四、copilot-chat to chatgpt4
+#### ~~四、copilot-chat to chatgpt4~~
 
 通过后端反向代理，可以将 `copilot-chat` 的请求转换为 `chatgpt4 api` 请求，从而实现有 `copilot` 账号即可畅享 `chatgpt-4` 聊天功能。
 
@@ -39,7 +39,11 @@
 
 **重要：此操作目前观测极易被禁用 `copilot` 权限，除非你的 `github token` 非常多，否则慎重使用!**
 
-> 部分功能需要开启配置才能启用，当前默认配置文件仅开启了 `copilot share` 功能，其他功能需要手动开启。详见[功能配置说明](#功能配置说明)
+**该功能从本仓库删除，指路 [**copilot_to_chatgpt4**](https://github.com/lvguanjun/copilot_to_chatgpt4)**
+
+#### 五、其他说明
+
+> 部分功能需要开启配置才能启用，当前默认配置文件仅开启了 `copilot share` 功能，其他功能需要手动开启。详见 [功能配置说明](#功能配置说明)
 
 > **如果只是想使用 copilot ，可直接使用 zhile 大佬的 [CoCopilot插件](https://zhile.io/2023/09/09/github-got-banned.html#more-468)，也可以 vscode 插件商店搜索 `CoCopilot` 安装。感恩大佬，给大佬插件五星好评呀。** :star::star::star::star::star:
 
@@ -364,11 +368,6 @@ copilot-chat 使用 chatgpt 接口代理回答问题
 
 1. 服务端配置 `USE_GPT_PROXY = True` 且 `PROXY_COMPLETION_REQUEST = True` 。
 2. 客户端插件配置 `debug.chatOverrideProxyUrl` 为代理服务器地址。
-
-### 5. copilot to chatgpt4
-
-1. 服务端配置 `PROXY_GPT_CHAT_COMPLETION = True` 。
-
 
 
 ## 企业认证方案
